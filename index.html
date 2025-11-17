@@ -640,6 +640,7 @@
                         elevation: 'Elevation',
                         length: 'Length',
                         area: 'Area',
+                        depth: 'Depth',
                         production: 'Production',
                         year: 'Year',
                         parents: 'Parents',
@@ -685,6 +686,7 @@
                         elevation: '標高',
                         length: '長さ',
                         area: '面積',
+                        depth: '深さ',
                         production: '生産量',
                         year: '年',
                         parents: '親品種',
@@ -2504,6 +2506,8 @@
                                 html += `<p><strong>${t('length')}:</strong> <span class="value">${value}</span></p>`;
                             } else if (key === 'Area') {
                                 html += `<p><strong>${t('area')}:</strong> <span class="value">${value}</span></p>`;
+                            } else if (key === 'Depth') {
+                                html += `<p><strong>${t('depth')}:</strong> <span class="value">${value}m</span></p>`;
                             } else {
                                 html += `<p><strong>${key}:</strong> <span class="value">${value}</span></p>`;
                             }
