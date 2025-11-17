@@ -1,0 +1,190 @@
+#!/usr/bin/env python3
+"""
+Create more accurate mountain range boundaries using approximate geographic extents.
+These are simplified polygons based on the known locations of each range.
+"""
+
+import csv
+
+# Define approximate boundaries for each mountain range
+# Format: list of lat,lon points forming a polygon
+mountain_range_boundaries = {
+    'Kitakami Mountains': {
+        'japanese': '北上山地',
+        'prefectures': 'Iwate;Miyagi',
+        # Narrow ridge running north-south through eastern Iwate
+        'coordinates': [
+            '40.0,141.5', '39.9,141.6', '39.7,141.7', '39.5,141.8',
+            '39.3,141.7', '39.1,141.6', '39.0,141.5', '38.9,141.4',
+            '38.8,141.3', '38.9,141.2', '39.0,141.3', '39.2,141.4',
+            '39.4,141.5', '39.6,141.5', '39.8,141.4', '40.0,141.5'
+        ]
+    },
+
+    'Ou Mountains': {
+        'japanese': '奥羽山脈',
+        'prefectures': 'Aomori;Iwate;Miyagi;Akita;Yamagata;Fukushima',
+        # Spine running through the center of Tohoku
+        'coordinates': [
+            '40.5,140.7', '40.3,140.9', '40.1,140.8', '39.9,140.9',
+            '39.7,140.8', '39.5,140.7', '39.3,140.6', '39.1,140.5',
+            '38.9,140.4', '38.7,140.3', '38.5,140.2', '38.3,140.1',
+            '38.1,140.0', '37.9,139.9', '37.7,139.8', '37.5,140.0',
+            '37.7,140.2', '37.9,140.3', '38.1,140.4', '38.3,140.5',
+            '38.5,140.6', '38.7,140.7', '38.9,140.8', '39.1,140.9',
+            '39.3,141.0', '39.5,141.1', '39.7,141.2', '39.9,141.1',
+            '40.1,141.0', '40.3,140.9', '40.5,140.7'
+        ]
+    },
+
+    'Dewa Sanzan': {
+        'japanese': '出羽三山',
+        'prefectures': 'Yamagata',
+        # Small area in central Yamagata
+        'coordinates': [
+            '38.7,139.9', '38.6,140.0', '38.5,140.0', '38.5,139.9',
+            '38.6,139.8', '38.7,139.9'
+        ]
+    },
+
+    'Hida Mountains': {
+        'japanese': '飛騨山脈',
+        'prefectures': 'Nagano;Gifu;Toyama',
+        # Northern Japanese Alps
+        'coordinates': [
+            '36.7,137.5', '36.6,137.7', '36.5,137.8', '36.4,137.9',
+            '36.3,137.9', '36.2,137.8', '36.1,137.7', '36.2,137.6',
+            '36.3,137.5', '36.4,137.4', '36.5,137.4', '36.6,137.4',
+            '36.7,137.5'
+        ]
+    },
+
+    'Kiso Mountains': {
+        'japanese': '木曽山脈',
+        'prefectures': 'Nagano',
+        # Central Japanese Alps
+        'coordinates': [
+            '36.0,137.8', '35.9,137.9', '35.8,138.0', '35.7,137.9',
+            '35.7,137.8', '35.8,137.7', '35.9,137.7', '36.0,137.8'
+        ]
+    },
+
+    'Akaishi Mountains': {
+        'japanese': '赤石山脈',
+        'prefectures': 'Nagano;Shizuoka;Yamanashi',
+        # Southern Japanese Alps
+        'coordinates': [
+            '35.9,138.1', '35.8,138.3', '35.7,138.4', '35.6,138.4',
+            '35.5,138.3', '35.4,138.2', '35.5,138.1', '35.6,138.0',
+            '35.7,138.0', '35.8,138.0', '35.9,138.1'
+        ]
+    },
+
+    'Yatsugatake Mountains': {
+        'japanese': '八ヶ岳連峰',
+        'prefectures': 'Nagano;Yamanashi',
+        # Between Nagano and Yamanashi
+        'coordinates': [
+            '36.1,138.3', '36.0,138.4', '35.9,138.4', '35.9,138.3',
+            '36.0,138.2', '36.1,138.3'
+        ]
+    },
+
+    'Tanzawa Mountains': {
+        'japanese': '丹沢山地',
+        'prefectures': 'Kanagawa',
+        # Western Kanagawa
+        'coordinates': [
+            '35.5,139.1', '35.4,139.2', '35.3,139.2', '35.3,139.1',
+            '35.4,139.0', '35.5,139.1'
+        ]
+    },
+
+    'Misaka Mountains': {
+        'japanese': '御坂山地',
+        'prefectures': 'Yamanashi',
+        # Southern Yamanashi
+        'coordinates': [
+            '35.6,138.7', '35.5,138.8', '35.5,138.7', '35.6,138.6',
+            '35.6,138.7'
+        ]
+    },
+
+    'Suzuka Mountains': {
+        'japanese': '鈴鹿山脈',
+        'prefectures': 'Mie;Shiga',
+        # Border between Mie and Shiga
+        'coordinates': [
+            '35.4,136.4', '35.3,136.5', '35.2,136.5', '35.0,136.4',
+            '34.9,136.3', '35.0,136.2', '35.1,136.2', '35.2,136.3',
+            '35.3,136.3', '35.4,136.4'
+        ]
+    },
+
+    'Kii Mountains': {
+        'japanese': '紀伊山地',
+        'prefectures': 'Nara;Wakayama;Mie',
+        # Kii Peninsula
+        'coordinates': [
+            '34.3,135.8', '34.2,136.0', '34.0,136.1', '33.9,136.0',
+            '33.8,135.9', '33.9,135.7', '34.0,135.7', '34.1,135.7',
+            '34.2,135.7', '34.3,135.8'
+        ]
+    },
+
+    'Yoshino Mountains': {
+        'japanese': '吉野山',
+        'prefectures': 'Nara',
+        # Central Nara
+        'coordinates': [
+            '34.4,135.9', '34.3,135.9', '34.3,135.8', '34.4,135.8',
+            '34.4,135.9'
+        ]
+    },
+
+    'Shikoku Mountains': {
+        'japanese': '四国山地',
+        'prefectures': 'Tokushima;Kochi;Ehime',
+        # Central Shikoku
+        'coordinates': [
+            '34.0,133.5', '33.9,133.8', '33.8,134.0', '33.7,134.2',
+            '33.6,134.3', '33.5,134.2', '33.5,134.0', '33.6,133.8',
+            '33.7,133.6', '33.8,133.4', '33.9,133.3', '34.0,133.5'
+        ]
+    },
+
+    'Shirakami Mountains': {
+        'japanese': '白神山地',
+        'prefectures': 'Aomori;Akita',
+        # Border of Aomori and Akita
+        'coordinates': [
+            '40.6,140.1', '40.5,140.3', '40.4,140.3', '40.3,140.2',
+            '40.3,140.0', '40.4,139.9', '40.5,139.9', '40.6,140.1'
+        ]
+    },
+}
+
+print(f"Creating accurate mountain range boundaries...")
+print(f"Total ranges: {len(mountain_range_boundaries)}")
+
+# Convert to CSV format
+results = []
+for name, data in mountain_range_boundaries.items():
+    coords = ';'.join(data['coordinates'])
+    results.append({
+        'Name': name,
+        'Japanese Name': data['japanese'],
+        'Prefectures': data['prefectures'],
+        'Coordinates': coords
+    })
+    print(f"  • {name} ({data['japanese']}) - {len(data['coordinates'])} points")
+
+# Write to CSV
+with open('mountain_ranges_geo.csv', 'w', newline='', encoding='utf-8') as f:
+    fieldnames = ['Name', 'Japanese Name', 'Prefectures', 'Coordinates']
+    writer = csv.DictWriter(f, fieldnames=fieldnames)
+    writer.writeheader()
+    writer.writerows(results)
+
+print(f"\n✓ Written to mountain_ranges_geo.csv")
+print(f"✓ Created {len(results)} mountain ranges with accurate boundaries")

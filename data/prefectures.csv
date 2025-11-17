@@ -1,0 +1,48 @@
+Name,Japanese Name,Region,Region Kanji,Old Provinces,Population,Area
+Hokkaido,北海道,Hokkaido,北海道,Ezo (蝦夷地),5228000,83424
+Aomori,青森県,Tohoku,東北,Mutsu (陸奥国),1237000,9646
+Iwate,岩手県,Tohoku,東北,Mutsu (陸奥国),1203000,15275
+Miyagi,宮城県,Tohoku,東北,Mutsu (陸奥国),2301000,7282
+Akita,秋田県,Tohoku,東北,Dewa (出羽国),952000,11638
+Yamagata,山形県,Tohoku,東北,Dewa (出羽国),1068000,9323
+Fukushima,福島県,Tohoku,東北,Mutsu (陸奥国),1832000,13784
+Ibaraki,茨城県,Kanto,関東,Shimosa (下総国); Hitachi (常陸国),2860000,6097
+Tochigi,栃木県,Kanto,関東,Shimotsuke (下野国),1934000,6408
+Gunma,群馬県,Kanto,関東,Kozuke (上野国),1931000,6362
+Saitama,埼玉県,Kanto,関東,Musashi (武蔵国),7345000,3798
+Chiba,千葉県,Kanto,関東,Awa (安房国); Kazusa (上総国); Shimosa (下総国),6259000,5158
+Tokyo,東京都,Kanto,関東,Musashi (武蔵国),13960000,2194
+Kanagawa,神奈川県,Kanto,関東,Sagami (相模国); Musashi (武蔵国),9198000,2416
+Niigata,新潟県,Chubu,中部,Echigo (越後国); Sado (佐渡国),2201000,12584
+Toyama,富山県,Chubu,中部,Etchu (越中国),1044000,4248
+Ishikawa,石川県,Chubu,中部,Kaga (加賀国); Noto (能登国),1133000,4186
+Fukui,福井県,Chubu,中部,Wakasa (若狭国); Echizen (越前国),768000,4191
+Yamanashi,山梨県,Chubu,中部,Kai (甲斐国),809000,4465
+Nagano,長野県,Chubu,中部,Shinano (信濃国),2048000,13562
+Gifu,岐阜県,Chubu,中部,Mino (美濃国); Hida (飛騨国),1979000,10621
+Shizuoka,静岡県,Chubu,中部,Totomi (遠江国); Suruga (駿河国); Izu (伊豆国),3633000,7777
+Aichi,愛知県,Chubu,中部,Owari (尾張国); Mikawa (三河国),7542000,5173
+Mie,三重県,Kansai,関西,Iga (伊賀国); Ise (伊勢国); Shima (志摩国); Kii (紀伊国),1771000,5774
+Shiga,滋賀県,Kansai,関西,Omi (近江国),1414000,4017
+Kyoto,京都府,Kansai,関西,Yamashiro (山城国); Tango (丹後国); Tamba (丹波国),2578000,4612
+Osaka,大阪府,Kansai,関西,Settsu (摂津国); Kawachi (河内国); Izumi (和泉国),8809000,1905
+Hyogo,兵庫県,Kansai,関西,Settsu (摂津国); Tamba (丹波国); Tajima (但馬国); Harima (播磨国); Awaji (淡路国),5466000,8401
+Nara,奈良県,Kansai,関西,Yamato (大和国),1324000,3691
+Wakayama,和歌山県,Kansai,関西,Kii (紀伊国),923000,4725
+Tottori,鳥取県,Chugoku,中国,Inaba (因幡国); Hoki (伯耆国),553000,3507
+Shimane,島根県,Chugoku,中国,Izumo (出雲国); Iwami (石見国); Oki (隠岐国),671000,6708
+Okayama,岡山県,Chugoku,中国,Mimasaka (美作国); Bizen (備前国); Bitchu (備中国),1889000,7114
+Hiroshima,広島県,Chugoku,中国,Bingo (備後国); Aki (安芸国),2804000,8479
+Yamaguchi,山口県,Chugoku,中国,Suo (周防国); Nagato (長門国),1342000,6113
+Tokushima,徳島県,Shikoku,四国,Awa (阿波国),719000,4147
+Kagawa,香川県,Shikoku,四国,Sanuki (讃岐国),956000,1877
+Ehime,愛媛県,Shikoku,四国,Iyo (伊予国),1334000,5676
+Kochi,高知県,Shikoku,四国,Tosa (土佐国),691000,7104
+Fukuoka,福岡県,Kyushu,九州,Chikuzen (筑前国); Chikugo (筑後国); Buzen (豊前国),5104000,4987
+Saga,佐賀県,Kyushu,九州,Hizen (肥前国),811000,2441
+Nagasaki,長崎県,Kyushu,九州,Hizen (肥前国); Iki (壱岐国); Tsushima (対馬国),1312000,4131
+Kumamoto,熊本県,Kyushu,九州,Higo (肥後国),1738000,7409
+Oita,大分県,Kyushu,九州,Buzen (豊前国); Bungo (豊後国),1123000,6341
+Miyazaki,宮崎県,Kyushu,九州,Hyuga (日向国),1069000,7735
+Kagoshima,鹿児島県,Kyushu,九州,Osumi (大隅国); Satsuma (薩摩国),1588000,9187
+Okinawa,沖縄県,Kyushu,九州,,1453000,2281

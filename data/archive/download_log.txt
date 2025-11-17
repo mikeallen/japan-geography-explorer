@@ -1,0 +1,18 @@
+============================================================
+OpenStreetMap River Data Downloader
+============================================================
+
+Found 43 rivers in rivers.csv
+
+Downloading geometry from OpenStreetMap...
+This may take several minutes...
+
+[1/43] Shinano (信濃川)
+Querying for: Shinano (信濃川)...
+  No data found for Shinano
+[2/43] Tone (利根川)
+Querying for: Tone (利根川)...
+  Error querying Tone: HTTPConnectionPool(host='overpass-api.de', port=80): Read timed out. (read timeout=30)
+  No data found for Tone
+[3/43] Ishikari (石狩川)
+Querying for: Ishikari (石狩川)...

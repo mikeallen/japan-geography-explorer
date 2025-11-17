@@ -1,0 +1,52 @@
+Reading rivers.csv...
+Found 43 rivers
+
+[1/43] Shinano (信濃川)... ✓ 51 points
+[2/43] Tone (利根川)... ✓ 51 points
+[3/43] Ishikari (石狩川)... ✓ 51 points
+[4/43] Teshio (天塩川)... ✓ 51 points
+[5/43] Kitakami (北上川)... ✓ 51 points
+[6/43] Abukuma (阿武隈川)... ✓ 50 points
+[7/43] Mogami (最上川)... ✓ 51 points
+[8/43] Kiso (木曽川)... ✓ 51 points
+[9/43] Agano (阿賀野川)... ✓ 51 points
+[10/43] Tenryu (天竜川)... ✓ 51 points
+[11/43] Shimanto (四万十川)... ✗ Not found
+[12/43] Yoshino (吉野川)...   Error: Expecting value: line 1 column 1 (char 0)
+✗ Not found
+[13/43] Kinugawa (鬼怒川)... ✓ 51 points
+[14/43] Arakawa (荒川)... ✗ Not found
+[15/43] Oi (大井川)... ✓ 51 points
+[16/43] Nagara (長良川)...   Error: Expecting value: line 1 column 1 (char 0)
+✗ Not found
+[17/43] Naka (那珂川)... ✓ 51 points
+[18/43] Chikugo (筑後川)... ✓ 51 points
+[19/43] Tama (多摩川)... ✓ 51 points
+[20/43] Yoneshiro (米代川)... ✓ 51 points
+[21/43] Kuji (久慈川)... ✓ 51 points
+[22/43] Niyodo (仁淀川)... ✓ 51 points
+[23/43] Ibi (揖斐川)... ✓ 51 points
+[24/43] Kuma (球磨川)... ✓ 51 points
+[25/43] Sagami (相模川)... ✓ 51 points
+[26/43] Watarase (渡良瀬川)... ✓ 50 points
+[27/43] Yodo (淀川)... ✓ 51 points
+[28/43] Tedori (手取川)... ✓ 51 points
+[29/43] Kano (狩野川)... ✓ 52 points
+[30/43] Katsura (桂川)... ✓ 51 points
+[31/43] Kamo (鴨川)... ✓ 51 points
+[32/43] Uji (宇治川)... ✓ 51 points
+[33/43] Omono (雄物川)... ✓ 51 points
+[34/43] Shirakawa (白川)... ✓ 51 points
+[35/43] Monobe (物部川)... ✓ 51 points
+[36/43] Ota (太田川)... ✗ Not found
+[37/43] Kurobe (黒部川)... ✓ 51 points
+[38/43] Kuzuryu (九頭竜川)... ✓ 51 points
+[39/43] Kino (紀ノ川)... ✗ Not found
+[40/43] Hayatsuki (早月川)... ✓ 51 points
+[41/43] Kumano (熊野川)... ✓ 51 points
+[42/43] Kiku (菊川)... ✓ 51 points
+[43/43] Omaru (小丸川)... ✗ Not found
+
+Successfully downloaded 36/43 rivers
+Writing to rivers_geo_new.csv...
+✓ Done! Saved 36 rivers

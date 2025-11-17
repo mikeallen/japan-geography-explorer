@@ -1,0 +1,147 @@
+Reading mountains list...
+Found 46 mountains/ranges to download
+
+[1/46] Chokai (鳥海山)...   Error searching for 鳥海山: 401 Client Error: 401 for url: http://api.geonames.org/searchJSON?name_equals=%E9%B3%A5%E6%B5%B7%E5%B1%B1&country=JP&featureClass=T&maxRows=5&username=mikeallen
+  Error searching for Chokai: 401 Client Error: 401 for url: http://api.geonames.org/searchJSON?name_equals=Chokai&country=JP&featureClass=T&maxRows=5&username=mikeallen
+✗ Not found
+[2/46] Bandai (磐梯山)...   Error searching for 磐梯山: 401 Client Error: 401 for url: http://api.geonames.org/searchJSON?name_equals=%E7%A3%90%E6%A2%AF%E5%B1%B1&country=JP&featureClass=T&maxRows=5&username=mikeallen
+  Error searching for Bandai: 401 Client Error: 401 for url: http://api.geonames.org/searchJSON?name_equals=Bandai&country=JP&featureClass=T&maxRows=5&username=mikeallen
+✗ Not found
+[3/46] Adatara (安達太良山)...   Error searching for 安達太良山: 401 Client Error: 401 for url: http://api.geonames.org/searchJSON?name_equals=%E5%AE%89%E9%81%94%E5%A4%AA%E8%89%AF%E5%B1%B1&country=JP&featureClass=T&maxRows=5&username=mikeallen
+  Error searching for Adatara: 401 Client Error: 401 for url: http://api.geonames.org/searchJSON?name_equals=Adatara&country=JP&featureClass=T&maxRows=5&username=mikeallen
+✗ Not found
+[4/46] Tsukuba (筑波山)...   Error searching for 筑波山: 401 Client Error: 401 for url: http://api.geonames.org/searchJSON?name_equals=%E7%AD%91%E6%B3%A2%E5%B1%B1&country=JP&featureClass=T&maxRows=5&username=mikeallen
+  Error searching for Tsukuba: 401 Client Error: 401 for url: http://api.geonames.org/searchJSON?name_equals=Tsukuba&country=JP&featureClass=T&maxRows=5&username=mikeallen
+✗ Not found
+[5/46] Nantai (男体山)...   Error searching for 男体山: 401 Client Error: 401 for url: http://api.geonames.org/searchJSON?name_equals=%E7%94%B7%E4%BD%93%E5%B1%B1&country=JP&featureClass=T&maxRows=5&username=mikeallen
+  Error searching for Nantai: 401 Client Error: 401 for url: http://api.geonames.org/searchJSON?name_equals=Nantai&country=JP&featureClass=T&maxRows=5&username=mikeallen
+✗ Not found
+[6/46] Myoko (妙高山)...   Error searching for 妙高山: 401 Client Error: 401 for url: http://api.geonames.org/searchJSON?name_equals=%E5%A6%99%E9%AB%98%E5%B1%B1&country=JP&featureClass=T&maxRows=5&username=mikeallen
+  Error searching for Myoko: 401 Client Error: 401 for url: http://api.geonames.org/searchJSON?name_equals=Myoko&country=JP&featureClass=T&maxRows=5&username=mikeallen
+✗ Not found
+[7/46] Hakusan (白山)...   Error searching for 白山: 401 Client Error: 401 for url: http://api.geonames.org/searchJSON?name_equals=%E7%99%BD%E5%B1%B1&country=JP&featureClass=T&maxRows=5&username=mikeallen
+  Error searching for Hakusan: 401 Client Error: 401 for url: http://api.geonames.org/searchJSON?name_equals=Hakusan&country=JP&featureClass=T&maxRows=5&username=mikeallen
+✗ Not found
+[8/46] Fuji (富士山)...   Error searching for 富士山: 401 Client Error: 401 for url: http://api.geonames.org/searchJSON?name_equals=%E5%AF%8C%E5%A3%AB%E5%B1%B1&country=JP&featureClass=T&maxRows=5&username=mikeallen
+  Error searching for Fuji: 401 Client Error: 401 for url: http://api.geonames.org/searchJSON?name_equals=Fuji&country=JP&featureClass=T&maxRows=5&username=mikeallen
+✗ Not found
+[9/46] Ishizuchi (石鎚山)...   Error searching for 石鎚山: 401 Client Error: 401 for url: http://api.geonames.org/searchJSON?name_equals=%E7%9F%B3%E9%8E%9A%E5%B1%B1&country=JP&featureClass=T&maxRows=5&username=mikeallen
+  Error searching for Ishizuchi: 401 Client Error: 401 for url: http://api.geonames.org/searchJSON?name_equals=Ishizuchi&country=JP&featureClass=T&maxRows=5&username=mikeallen
+✗ Not found
+[10/46] Aso (阿蘇山)...   Error searching for 阿蘇山: 401 Client Error: 401 for url: http://api.geonames.org/searchJSON?name_equals=%E9%98%BF%E8%98%87%E5%B1%B1&country=JP&featureClass=T&maxRows=5&username=mikeallen
+  Error searching for Aso: 401 Client Error: 401 for url: http://api.geonames.org/searchJSON?name_equals=Aso&country=JP&featureClass=T&maxRows=5&username=mikeallen
+✗ Not found
+[11/46] Akagi (赤城山)...   Error searching for 赤城山: 401 Client Error: 401 for url: http://api.geonames.org/searchJSON?name_equals=%E8%B5%A4%E5%9F%8E%E5%B1%B1&country=JP&featureClass=T&maxRows=5&username=mikeallen
+  Error searching for Akagi: 401 Client Error: 401 for url: http://api.geonames.org/searchJSON?name_equals=Akagi&country=JP&featureClass=T&maxRows=5&username=mikeallen
+✗ Not found
+[12/46] Haruna (榛名山)...   Error searching for 榛名山: 401 Client Error: 401 for url: http://api.geonames.org/searchJSON?name_equals=%E6%A6%9B%E5%90%8D%E5%B1%B1&country=JP&featureClass=T&maxRows=5&username=mikeallen
+  Error searching for Haruna: 401 Client Error: 401 for url: http://api.geonames.org/searchJSON?name_equals=Haruna&country=JP&featureClass=T&maxRows=5&username=mikeallen
+✗ Not found
+[13/46] Myogi (妙義山)...   Error searching for 妙義山: 401 Client Error: 401 for url: http://api.geonames.org/searchJSON?name_equals=%E5%A6%99%E7%BE%A9%E5%B1%B1&country=JP&featureClass=T&maxRows=5&username=mikeallen
+  Error searching for Myogi: 401 Client Error: 401 for url: http://api.geonames.org/searchJSON?name_equals=Myogi&country=JP&featureClass=T&maxRows=5&username=mikeallen
+✗ Not found
+[14/46] Kobushi (甲武信ヶ岳)...   Error searching for 甲武信ヶ岳: 401 Client Error: 401 for url: http://api.geonames.org/searchJSON?name_equals=%E7%94%B2%E6%AD%A6%E4%BF%A1%E3%83%B6%E5%B2%B3&country=JP&featureClass=T&maxRows=5&username=mikeallen
+  Error searching for Kobushi: 401 Client Error: 401 for url: http://api.geonames.org/searchJSON?name_equals=Kobushi&country=JP&featureClass=T&maxRows=5&username=mikeallen
+✗ Not found
+[15/46] Kumotori (雲取山)...   Error searching for 雲取山: 401 Client Error: 401 for url: http://api.geonames.org/searchJSON?name_equals=%E9%9B%B2%E5%8F%96%E5%B1%B1&country=JP&featureClass=T&maxRows=5&username=mikeallen
+  Error searching for Kumotori: 401 Client Error: 401 for url: http://api.geonames.org/searchJSON?name_equals=Kumotori&country=JP&featureClass=T&maxRows=5&username=mikeallen
+✗ Not found
+[16/46] Tsurugi (剱岳)...   Error searching for 剱岳: 401 Client Error: 401 for url: http://api.geonames.org/searchJSON?name_equals=%E5%89%B1%E5%B2%B3&country=JP&featureClass=T&maxRows=5&username=mikeallen
+  Error searching for Tsurugi: 401 Client Error: 401 for url: http://api.geonames.org/searchJSON?name_equals=Tsurugi&country=JP&featureClass=T&maxRows=5&username=mikeallen
+✗ Not found
+[17/46] Tate (立山)...   Error searching for 立山: 401 Client Error: 401 for url: http://api.geonames.org/searchJSON?name_equals=%E7%AB%8B%E5%B1%B1&country=JP&featureClass=T&maxRows=5&username=mikeallen
+  Error searching for Tate: 401 Client Error: 401 for url: http://api.geonames.org/searchJSON?name_equals=Tate&country=JP&featureClass=T&maxRows=5&username=mikeallen
+✗ Not found
+[18/46] Kaikomagatake (甲斐駒ヶ岳)...   Error searching for 甲斐駒ヶ岳: 401 Client Error: 401 for url: http://api.geonames.org/searchJSON?name_equals=%E7%94%B2%E6%96%90%E9%A7%92%E3%83%B6%E5%B2%B3&country=JP&featureClass=T&maxRows=5&username=mikeallen
+  Error searching for Kaikomagatake: 401 Client Error: 401 for url: http://api.geonames.org/searchJSON?name_equals=Kaikomagatake&country=JP&featureClass=T&maxRows=5&username=mikeallen
+✗ Not found
+[19/46] Ibuki (伊吹山)...   Error searching for 伊吹山: 401 Client Error: 401 for url: http://api.geonames.org/searchJSON?name_equals=%E4%BC%8A%E5%90%B9%E5%B1%B1&country=JP&featureClass=T&maxRows=5&username=mikeallen
+  Error searching for Ibuki: 401 Client Error: 401 for url: http://api.geonames.org/searchJSON?name_equals=Ibuki&country=JP&featureClass=T&maxRows=5&username=mikeallen
+✗ Not found
+[20/46] Ikoma (生駒山)...   Error searching for 生駒山: 401 Client Error: 401 for url: http://api.geonames.org/searchJSON?name_equals=%E7%94%9F%E9%A7%92%E5%B1%B1&country=JP&featureClass=T&maxRows=5&username=mikeallen
+  Error searching for Ikoma: 401 Client Error: 401 for url: http://api.geonames.org/searchJSON?name_equals=Ikoma&country=JP&featureClass=T&maxRows=5&username=mikeallen
+✗ Not found
+[21/46] Kongo (金剛山)...   Error searching for 金剛山: 401 Client Error: 401 for url: http://api.geonames.org/searchJSON?name_equals=%E9%87%91%E5%89%9B%E5%B1%B1&country=JP&featureClass=T&maxRows=5&username=mikeallen
+  Error searching for Kongo: 401 Client Error: 401 for url: http://api.geonames.org/searchJSON?name_equals=Kongo&country=JP&featureClass=T&maxRows=5&username=mikeallen
+✗ Not found
+[22/46] Daisen (大山)...   Error searching for 大山: 401 Client Error: 401 for url: http://api.geonames.org/searchJSON?name_equals=%E5%A4%A7%E5%B1%B1&country=JP&featureClass=T&maxRows=5&username=mikeallen
+  Error searching for Daisen: 401 Client Error: 401 for url: http://api.geonames.org/searchJSON?name_equals=Daisen&country=JP&featureClass=T&maxRows=5&username=mikeallen
+✗ Not found
+[23/46] Tsurugi (剣山)...   Error searching for 剣山: 401 Client Error: 401 for url: http://api.geonames.org/searchJSON?name_equals=%E5%89%A3%E5%B1%B1&country=JP&featureClass=T&maxRows=5&username=mikeallen
+  Error searching for Tsurugi: 401 Client Error: 401 for url: http://api.geonames.org/searchJSON?name_equals=Tsurugi&country=JP&featureClass=T&maxRows=5&username=mikeallen
+✗ Not found
+[24/46] Futago (双子山)...   Error searching for 双子山: 401 Client Error: 401 for url: http://api.geonames.org/searchJSON?name_equals=%E5%8F%8C%E5%AD%90%E5%B1%B1&country=JP&featureClass=T&maxRows=5&username=mikeallen
+  Error searching for Futago: 401 Client Error: 401 for url: http://api.geonames.org/searchJSON?name_equals=Futago&country=JP&featureClass=T&maxRows=5&username=mikeallen
+✗ Not found
+[25/46] Onitsuke (鬼岳)...   Error searching for 鬼岳: 401 Client Error: 401 for url: http://api.geonames.org/searchJSON?name_equals=%E9%AC%BC%E5%B2%B3&country=JP&featureClass=T&maxRows=5&username=mikeallen
+  Error searching for Onitsuke: 401 Client Error: 401 for url: http://api.geonames.org/searchJSON?name_equals=Onitsuke&country=JP&featureClass=T&maxRows=5&username=mikeallen
+✗ Not found
+[26/46] Osuzu (於鈴山)...   Error searching for 於鈴山: 401 Client Error: 401 for url: http://api.geonames.org/searchJSON?name_equals=%E6%96%BC%E9%88%B4%E5%B1%B1&country=JP&featureClass=T&maxRows=5&username=mikeallen
+  Error searching for Osuzu: 401 Client Error: 401 for url: http://api.geonames.org/searchJSON?name_equals=Osuzu&country=JP&featureClass=T&maxRows=5&username=mikeallen
+✗ Not found
+[27/46] Sakurajima (桜島)...   Error searching for 桜島: 401 Client Error: 401 for url: http://api.geonames.org/searchJSON?name_equals=%E6%A1%9C%E5%B3%B6&country=JP&featureClass=T&maxRows=5&username=mikeallen
+  Error searching for Sakurajima: 401 Client Error: 401 for url: http://api.geonames.org/searchJSON?name_equals=Sakurajima&country=JP&featureClass=T&maxRows=5&username=mikeallen
+✗ Not found
+[28/46] Ou-sanmyaku (奥羽山脈)...   Error searching for 奥羽山脈: 401 Client Error: 401 for url: http://api.geonames.org/searchJSON?name_equals=%E5%A5%A5%E7%BE%BD%E5%B1%B1%E8%84%88&country=JP&featureClass=T&maxRows=5&username=mikeallen
+  Error searching for Ou-sanmyaku: 401 Client Error: 401 for url: http://api.geonames.org/searchJSON?name_equals=Ou-sanmyaku&country=JP&featureClass=T&maxRows=5&username=mikeallen
+✗ Not found
+[29/46] Dewasansan (出羽三山)...   Error searching for 出羽三山: 401 Client Error: 401 for url: http://api.geonames.org/searchJSON?name_equals=%E5%87%BA%E7%BE%BD%E4%B8%89%E5%B1%B1&country=JP&featureClass=T&maxRows=5&username=mikeallen
+  Error searching for Dewasansan: 401 Client Error: 401 for url: http://api.geonames.org/searchJSON?name_equals=Dewasansan&country=JP&featureClass=T&maxRows=5&username=mikeallen
+✗ Not found
+[30/46] Kurikoma (栗駒山)...   Error searching for 栗駒山: 401 Client Error: 401 for url: http://api.geonames.org/searchJSON?name_equals=%E6%A0%97%E9%A7%92%E5%B1%B1&country=JP&featureClass=T&maxRows=5&username=mikeallen
+  Error searching for Kurikoma: 401 Client Error: 401 for url: http://api.geonames.org/searchJSON?name_equals=Kurikoma&country=JP&featureClass=T&maxRows=5&username=mikeallen
+✗ Not found
+[31/46] Funagata (舟形山)...   Error searching for 舟形山: 401 Client Error: 401 for url: http://api.geonames.org/searchJSON?name_equals=%E8%88%9F%E5%BD%A2%E5%B1%B1&country=JP&featureClass=T&maxRows=5&username=mikeallen
+  Error searching for Funagata: 401 Client Error: 401 for url: http://api.geonames.org/searchJSON?name_equals=Funagata&country=JP&featureClass=T&maxRows=5&username=mikeallen
+✗ Not found
+[32/46] Hakkyo (八経ヶ岳)...   Error searching for 八経ヶ岳: 401 Client Error: 401 for url: http://api.geonames.org/searchJSON?name_equals=%E5%85%AB%E7%B5%8C%E3%83%B6%E5%B2%B3&country=JP&featureClass=T&maxRows=5&username=mikeallen
+  Error searching for Hakkyo: 401 Client Error: 401 for url: http://api.geonames.org/searchJSON?name_equals=Hakkyo&country=JP&featureClass=T&maxRows=5&username=mikeallen
+✗ Not found
+[33/46] Kii (紀伊山地)...   Error searching for 紀伊山地: 401 Client Error: 401 for url: http://api.geonames.org/searchJSON?name_equals=%E7%B4%80%E4%BC%8A%E5%B1%B1%E5%9C%B0&country=JP&featureClass=T&maxRows=5&username=mikeallen
+  Error searching for Kii: 401 Client Error: 401 for url: http://api.geonames.org/searchJSON?name_equals=Kii&country=JP&featureClass=T&maxRows=5&username=mikeallen
+✗ Not found
+[34/46] Yoshino (吉野山)...   Error searching for 吉野山: 401 Client Error: 401 for url: http://api.geonames.org/searchJSON?name_equals=%E5%90%89%E9%87%8E%E5%B1%B1&country=JP&featureClass=T&maxRows=5&username=mikeallen
+  Error searching for Yoshino: 401 Client Error: 401 for url: http://api.geonames.org/searchJSON?name_equals=Yoshino&country=JP&featureClass=T&maxRows=5&username=mikeallen
+✗ Not found
+[35/46] Shikoku (四国山地)...   Error searching for 四国山地: 401 Client Error: 401 for url: http://api.geonames.org/searchJSON?name_equals=%E5%9B%9B%E5%9B%BD%E5%B1%B1%E5%9C%B0&country=JP&featureClass=T&maxRows=5&username=mikeallen
+  Error searching for Shikoku: 401 Client Error: 401 for url: http://api.geonames.org/searchJSON?name_equals=Shikoku&country=JP&featureClass=T&maxRows=5&username=mikeallen
+✗ Not found
+[36/46] Sefuri (脊振山)...   Error searching for 脊振山: 401 Client Error: 401 for url: http://api.geonames.org/searchJSON?name_equals=%E8%84%8A%E6%8C%AF%E5%B1%B1&country=JP&featureClass=T&maxRows=5&username=mikeallen
+  Error searching for Sefuri: 401 Client Error: 401 for url: http://api.geonames.org/searchJSON?name_equals=Sefuri&country=JP&featureClass=T&maxRows=5&username=mikeallen
+✗ Not found
+[37/46] Taisetsu (大雪山)...   Error searching for 大雪山: 401 Client Error: 401 for url: http://api.geonames.org/searchJSON?name_equals=%E5%A4%A7%E9%9B%AA%E5%B1%B1&country=JP&featureClass=T&maxRows=5&username=mikeallen
+  Error searching for Taisetsu: 401 Client Error: 401 for url: http://api.geonames.org/searchJSON?name_equals=Taisetsu&country=JP&featureClass=T&maxRows=5&username=mikeallen
+✗ Not found
+[38/46] Shirakami (白神山地)...   Error searching for 白神山地: 401 Client Error: 401 for url: http://api.geonames.org/searchJSON?name_equals=%E7%99%BD%E7%A5%9E%E5%B1%B1%E5%9C%B0&country=JP&featureClass=T&maxRows=5&username=mikeallen
+  Error searching for Shirakami: 401 Client Error: 401 for url: http://api.geonames.org/searchJSON?name_equals=Shirakami&country=JP&featureClass=T&maxRows=5&username=mikeallen
+✗ Not found
+[39/46] Hakkoda (八甲田山)...   Error searching for 八甲田山: 401 Client Error: 401 for url: http://api.geonames.org/searchJSON?name_equals=%E5%85%AB%E7%94%B2%E7%94%B0%E5%B1%B1&country=JP&featureClass=T&maxRows=5&username=mikeallen
+  Error searching for Hakkoda: 401 Client Error: 401 for url: http://api.geonames.org/searchJSON?name_equals=Hakkoda&country=JP&featureClass=T&maxRows=5&username=mikeallen
+✗ Not found
+[40/46] Kitakami (北上山地)...   Error searching for 北上山地: 401 Client Error: 401 for url: http://api.geonames.org/searchJSON?name_equals=%E5%8C%97%E4%B8%8A%E5%B1%B1%E5%9C%B0&country=JP&featureClass=T&maxRows=5&username=mikeallen
+  Error searching for Kitakami: 401 Client Error: 401 for url: http://api.geonames.org/searchJSON?name_equals=Kitakami&country=JP&featureClass=T&maxRows=5&username=mikeallen
+✗ Not found
+[41/46] Tanzawa (丹沢山地)...   Error searching for 丹沢山地: 401 Client Error: 401 for url: http://api.geonames.org/searchJSON?name_equals=%E4%B8%B9%E6%B2%A2%E5%B1%B1%E5%9C%B0&country=JP&featureClass=T&maxRows=5&username=mikeallen
+  Error searching for Tanzawa: 401 Client Error: 401 for url: http://api.geonames.org/searchJSON?name_equals=Tanzawa&country=JP&featureClass=T&maxRows=5&username=mikeallen
+✗ Not found
+[42/46] Hida (飛騨山脈)...   Error searching for 飛騨山脈: 401 Client Error: 401 for url: http://api.geonames.org/searchJSON?name_equals=%E9%A3%9B%E9%A8%A8%E5%B1%B1%E8%84%88&country=JP&featureClass=T&maxRows=5&username=mikeallen
+  Error searching for Hida: 401 Client Error: 401 for url: http://api.geonames.org/searchJSON?name_equals=Hida&country=JP&featureClass=T&maxRows=5&username=mikeallen
+✗ Not found
+[43/46] Yatsugatake (八ヶ岳)...   Error searching for 八ヶ岳: 401 Client Error: 401 for url: http://api.geonames.org/searchJSON?name_equals=%E5%85%AB%E3%83%B6%E5%B2%B3&country=JP&featureClass=T&maxRows=5&username=mikeallen
+  Error searching for Yatsugatake: 401 Client Error: 401 for url: http://api.geonames.org/searchJSON?name_equals=Yatsugatake&country=JP&featureClass=T&maxRows=5&username=mikeallen
+✗ Not found
+[44/46] Misaka (御坂山地)...   Error searching for 御坂山地: 401 Client Error: 401 for url: http://api.geonames.org/searchJSON?name_equals=%E5%BE%A1%E5%9D%82%E5%B1%B1%E5%9C%B0&country=JP&featureClass=T&maxRows=5&username=mikeallen
+  Error searching for Misaka: 401 Client Error: 401 for url: http://api.geonames.org/searchJSON?name_equals=Misaka&country=JP&featureClass=T&maxRows=5&username=mikeallen
+✗ Not found
+[45/46] Akaishi (赤石山脈)...   Error searching for 赤石山脈: 401 Client Error: 401 for url: http://api.geonames.org/searchJSON?name_equals=%E8%B5%A4%E7%9F%B3%E5%B1%B1%E8%84%88&country=JP&featureClass=T&maxRows=5&username=mikeallen
+  Error searching for Akaishi: 401 Client Error: 401 for url: http://api.geonames.org/searchJSON?name_equals=Akaishi&country=JP&featureClass=T&maxRows=5&username=mikeallen
+✗ Not found
+[46/46] Suzuka (鈴鹿山脈)...   Error searching for 鈴鹿山脈: 401 Client Error: 401 for url: http://api.geonames.org/searchJSON?name_equals=%E9%88%B4%E9%B9%BF%E5%B1%B1%E8%84%88&country=JP&featureClass=T&maxRows=5&username=mikeallen
+  Error searching for Suzuka: 401 Client Error: 401 for url: http://api.geonames.org/searchJSON?name_equals=Suzuka&country=JP&featureClass=T&maxRows=5&username=mikeallen
+✗ Not found
+
+============================================================
+Download complete!
+  Successfully found: 0/46 mountains
+  Output: mountains_new.csv
+============================================================

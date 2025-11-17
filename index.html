@@ -1,0 +1,2681 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Japan Geography Explorer</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: #f5f5f7;
+            color: #1d1d1f;
+            min-height: 100vh;
+        }
+
+        .header {
+            background: white;
+            border-bottom: 1px solid #d2d2d7;
+            padding: 20px 30px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+            position: relative;
+        }
+
+        .header h1 {
+            font-size: 28px;
+            font-weight: 600;
+            color: #1d1d1f;
+        }
+
+        .header p {
+            font-size: 14px;
+            color: #86868b;
+            margin-top: 4px;
+        }
+
+        .main-container {
+            display: grid;
+            grid-template-columns: 200px minmax(400px, 1fr) 320px;
+            gap: 0;
+            height: calc(100vh - 90px);
+            min-height: 400px;
+        }
+
+        .sidebar {
+            background: white;
+            border-right: 1px solid #d2d2d7;
+            padding: 24px;
+            overflow-y: auto;
+        }
+
+        .sidebar h2 {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 16px;
+            color: #1d1d1f;
+        }
+
+        .layer-option {
+            padding: 8px 12px;
+            margin-bottom: 6px;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: 1px solid #d2d2d7;
+            background: #f5f5f7;
+        }
+
+        .layer-option:hover {
+            background: #e8e8ed;
+        }
+
+        .layer-option.active {
+            background: #0071e3;
+            color: white;
+            border-color: #0071e3;
+        }
+
+        .layer-option .name {
+            font-size: 15px;
+            font-weight: 500;
+            margin-bottom: 1px;
+        }
+
+        .layer-option .count {
+            font-size: 11px;
+            opacity: 0.7;
+        }
+
+        .map-container {
+            background: white;
+            position: relative;
+            overflow: hidden;
+            cursor: default;
+        }
+
+        .map-container.panning {
+            cursor: grabbing;
+        }
+
+        svg {
+            width: 100%;
+            height: 100%;
+            display: block;
+        }
+
+        .zoom-controls {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            z-index: 10;
+        }
+
+        .zoom-btn {
+            width: 44px;
+            height: 44px;
+            background: white;
+            border: 2px solid #d2d2d7;
+            border-radius: 8px;
+            font-size: 24px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+            color: #1d1d1f;
+        }
+
+        .zoom-btn:hover {
+            background: #f5f5f7;
+            border-color: #0071e3;
+        }
+
+        .zoom-btn:active {
+            background: #e8e8ed;
+        }
+
+        .zoom-level {
+            background: white;
+            border: 2px solid #d2d2d7;
+            border-radius: 8px;
+            padding: 8px;
+            text-align: center;
+            font-size: 12px;
+            font-weight: 600;
+            color: #86868b;
+        }
+
+        .filter-checkbox {
+            display: flex;
+            align-items: center;
+            padding: 10px 12px;
+            background: #f5f5f7;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .filter-checkbox:hover {
+            background: #e8e8ed;
+        }
+
+        .filter-checkbox input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            margin-right: 10px;
+            cursor: pointer;
+            accent-color: #0071e3;
+        }
+
+        .filter-checkbox span {
+            font-size: 13px;
+            color: #1d1d1f;
+            font-weight: 500;
+        }
+
+        .info-panel {
+            background: white;
+            border-left: 1px solid #d2d2d7;
+            padding: 24px;
+            overflow-y: auto;
+        }
+
+        .info-panel h2 {
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 16px;
+        }
+
+        .info-card {
+            background: #f5f5f7;
+            border-radius: 8px;
+            padding: 10px 12px;
+            margin-bottom: 8px;
+        }
+
+        .info-card h3 {
+            font-size: 13px;
+            font-weight: 600;
+            color: #1d1d1f;
+            margin-bottom: 6px;
+        }
+
+        .info-card p {
+            font-size: 15px;
+            color: #86868b;
+            line-height: 1.4;
+        }
+
+        .info-card .value {
+            color: #1d1d1f;
+            font-weight: 500;
+        }
+
+        /* Map elements */
+        .base-outline {
+            fill: #f5f5f7;
+            stroke: #d2d2d7;
+            stroke-width: 1;
+            cursor: pointer;
+            transition: fill 0.2s;
+            pointer-events: all;
+        }
+
+        .base-outline:hover {
+            fill: #e8e8ed;
+        }
+
+        .island-outline {
+            fill: #e8e8ed;
+            stroke: #86868b;
+            stroke-width: 1;
+            transition: fill 0.3s;
+        }
+
+        .prefecture {
+            fill: #d2d2d7;
+            stroke: white;
+            stroke-width: 1.5;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .prefecture:hover {
+            fill: #a1a1a6;
+        }
+
+        .prefecture.active {
+            fill: #0071e3;
+        }
+
+        .prefecture-highlight {
+            fill: #ffd700 !important;
+            stroke: #ff8c00 !important;
+            stroke-width: 3 !important;
+            opacity: 0.7;
+        }
+
+        .prefecture-filtered {
+            fill: #fff9e6 !important;
+            stroke: #ffa500 !important;
+            stroke-width: 3 !important;
+            opacity: 0.9;
+        }
+
+        .old_province {
+            fill: #c8b8db;
+            stroke: #5a4a6a;
+            stroke-width: 3;
+            cursor: pointer;
+            transition: all 0.2s;
+            opacity: 0.7;
+        }
+
+        .old_province:hover {
+            fill: #b8a8cb;
+            stroke-width: 4;
+        }
+
+        .old_province.active {
+            fill: #7c5cbf;
+            stroke-width: 4;
+        }
+
+        .lake {
+            fill: #007aff;
+            opacity: 0.6;
+            stroke: #0051d5;
+            stroke-width: 1;
+            cursor: pointer;
+            transition: opacity 0.2s;
+        }
+
+        .lake:hover {
+            opacity: 0.8;
+        }
+
+        .river {
+            fill: none;
+            stroke: #007aff;
+            stroke-width: 2;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+            cursor: pointer;
+            transition: stroke-width 0.2s, stroke 0.2s;
+            pointer-events: stroke;
+        }
+
+        .river:hover {
+            stroke-width: 3;
+        }
+
+        .river.selected {
+            stroke: #ff0000;
+            stroke-width: 4;
+        }
+
+        .mountain {
+            fill: #8B4513;
+            stroke: white;
+            stroke-width: 2;
+            cursor: pointer;
+            transition: r 0.2s;
+        }
+
+        .mountain:hover {
+            r: 8;
+        }
+
+        .mountain-range {
+            fill: #D2B48C !important;
+            opacity: 0.5 !important;
+            stroke: #8B4513 !important;
+            stroke-width: 2 !important;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .mountain-range:hover {
+            opacity: 0.7 !important;
+            stroke-width: 3 !important;
+        }
+
+        .mountain-range.selected {
+            fill: #0056b3 !important;
+            opacity: 0.7 !important;
+            stroke: #003d82 !important;
+            stroke-width: 3 !important;
+        }
+
+        .text-label {
+            fill: #1d1d1f;
+            font-size: 28px;
+            font-weight: 700;
+            pointer-events: none;
+            paint-order: stroke;
+            stroke: white;
+            stroke-width: 5px;
+            stroke-linejoin: round;
+        }
+
+        .text-label.mountain-label-text,
+        .text-label.river-label-text,
+        .text-label.lake-label-text {
+            pointer-events: auto;
+            cursor: pointer;
+            transition: fill 0.2s;
+        }
+
+        .text-label.mountain-label-text:hover,
+        .text-label.river-label-text:hover,
+        .text-label.lake-label-text:hover {
+            fill: #0071e3;
+        }
+
+        .text-label-large {
+            font-size: 42px;
+        }
+
+        .text-label-xlarge {
+            font-size: 56px;
+        }
+
+        .sake-rice-label-text {
+            pointer-events: all;
+            cursor: pointer;
+        }
+
+        .sake-rice-label-text:hover {
+            fill: #ff6b00;
+        }
+
+        .sake-rice-label-line {
+            pointer-events: none;
+        }
+
+        .loading {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 14px;
+            color: #86868b;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .stat-box {
+            background: linear-gradient(135deg, #0071e3 0%, #0051d5 100%);
+            border-radius: 12px;
+            padding: 16px;
+            color: white;
+        }
+
+        .stat-box .number {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+
+        .stat-box .label {
+            font-size: 12px;
+            opacity: 0.9;
+            fill: white;
+        }
+
+        @media (max-width: 1200px) {
+            .main-container {
+                grid-template-columns: 1fr;
+                grid-template-rows: auto 1fr auto;
+            }
+
+            .sidebar, .info-panel {
+                max-height: 300px;
+            }
+        }
+    </style>
+    <script src="japan_geo_data.js"></script>
+</head>
+<body>
+    <div class="header">
+        <h1>Japan Geography Explorer</h1>
+        <p>Interactive visualization of Japan's geographic features</p>
+        <div style="position: absolute; top: 20px; right: 30px;">
+            <button id="langToggle" style="padding: 8px 16px; border-radius: 6px; border: 1px solid #d2d2d7; background: #f5f5f7; cursor: pointer; font-size: 14px; font-weight: 500;" onclick="app.toggleLanguage()">
+                日本語
+            </button>
+        </div>
+    </div>
+
+    <div class="main-container">
+        <div class="sidebar">
+            <h2>Layers</h2>
+            <div id="layerControls"></div>
+
+            <div id="sakeRiceFilter" style="display: none; margin-top: 20px; padding-top: 20px; border-top: 1px solid #d2d2d7;">
+                <h2 style="font-size: 14px; margin-bottom: 12px;">Filter Options</h2>
+                <label class="filter-checkbox">
+                    <input type="checkbox" id="importanceFilter" onchange="app.toggleImportanceFilter()">
+                    <span>Show only top varieties</span>
+                </label>
+            </div>
+        </div>
+
+        <div class="map-container" id="mapContainer">
+            <div class="zoom-controls">
+                <button class="zoom-btn" onclick="app.zoomIn()" title="Zoom In">+</button>
+                <div class="zoom-level" id="zoomLevel">100%</div>
+                <button class="zoom-btn" onclick="app.zoomOut()" title="Zoom Out">−</button>
+                <button class="zoom-btn" onclick="app.resetZoom()" title="Reset">⟲</button>
+            </div>
+            <div class="loading" id="loading">Loading map data...</div>
+            <svg id="map" viewBox="-200 0 1400 1400">
+                <g id="mapGroup"></g>
+            </svg>
+        </div>
+
+        <div class="info-panel">
+            <h2>Information</h2>
+            <div id="infoContent">
+                <div class="stats-grid">
+                    <div class="stat-box">
+                        <div class="number">47</div>
+                        <div class="label">Prefectures</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="number">6,852</div>
+                        <div class="label">Islands</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="number">377,975</div>
+                        <div class="label">km² Area</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="number">125M</div>
+                        <div class="label">Population</div>
+                    </div>
+                </div>
+                <div class="info-card">
+                    <h3>Welcome</h3>
+                    <p>Select a layer from the left panel to explore different aspects of Japan's geography. Click on any feature to see detailed information.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        class JapanGeoExplorer {
+            constructor() {
+                this.layers = {
+                    prefectures: { name: 'Prefectures', file: 'prefectures_geo.csv', type: 'polygon', active: true },
+                    old_provinces: { name: 'Old Provinces', file: 'old_provinces_geo.csv', type: 'polygon', active: false },
+                    lakes: { name: 'Lakes', file: 'lakes_geo.csv', type: 'polygon', active: false },
+                    rivers: { name: 'Rivers', file: 'rivers_geo_final.csv', type: 'polyline', active: false },
+                    mountains: { name: 'Mountains', file: 'mountains_geo.csv', type: 'point', active: false },
+                    mountain_ranges: { name: 'Mountain Ranges', file: 'mountain_ranges_geo.csv', type: 'polygon', active: false },
+                    sake_rice: { name: 'Sake Rice', file: 'sake_rice.csv', type: 'label', active: false }
+                };
+
+                this.metadata = {};
+                this.geometry = {};
+                this.currentLayer = 'prefectures';
+
+                // Map projection parameters (simple equirectangular)
+                this.bounds = {
+                    minLat: 30,
+                    maxLat: 46,
+                    minLon: 128,
+                    maxLon: 146
+                };
+
+                // Zoom/pan state
+                this.zoom = 1;
+                this.panX = 0;
+                this.panY = 0;
+                this.isPanning = false;
+                this.startX = 0;
+                this.startY = 0;
+
+                // Track selected river for highlighting
+                this.selectedRiver = null;
+
+                // Track filtered prefecture
+                this.filteredPrefecture = null;
+
+                // Track selected mountain range
+                this.selectedMountainRange = null;
+
+                // Sake rice importance filter
+                this.sakeRiceImportanceFilter = false;
+
+                // Prefecture name mapping (geometry name -> metadata name)
+                this.prefectureMap = {
+                    'Hokkai Do': 'Hokkaido',
+                    'Aomori Ken': 'Aomori',
+                    'Iwate Ken': 'Iwate',
+                    'Miyagi Ken': 'Miyagi',
+                    'Akita Ken': 'Akita',
+                    'Yamagata Ken': 'Yamagata',
+                    'Fukushima Ken': 'Fukushima',
+                    'Ibaraki Ken': 'Ibaraki',
+                    'Tochigi Ken': 'Tochigi',
+                    'Gunma Ken': 'Gunma',
+                    'Saitama Ken': 'Saitama',
+                    'Chiba Ken': 'Chiba',
+                    'Tokyo To': 'Tokyo',
+                    'Kanagawa Ken': 'Kanagawa',
+                    'Niigata Ken': 'Niigata',
+                    'Toyama Ken': 'Toyama',
+                    'Ishikawa Ken': 'Ishikawa',
+                    'Fukui Ken': 'Fukui',
+                    'Yamanashi Ken': 'Yamanashi',
+                    'Nagano Ken': 'Nagano',
+                    'Gifu Ken': 'Gifu',
+                    'Shizuoka Ken': 'Shizuoka',
+                    'Aichi Ken': 'Aichi',
+                    'Mie Ken': 'Mie',
+                    'Shiga Ken': 'Shiga',
+                    'Kyoto Fu': 'Kyoto',
+                    'Osaka Fu': 'Osaka',
+                    'Hyogo Ken': 'Hyogo',
+                    'Nara Ken': 'Nara',
+                    'Wakayama Ken': 'Wakayama',
+                    'Tottori Ken': 'Tottori',
+                    'Shimane Ken': 'Shimane',
+                    'Okayama Ken': 'Okayama',
+                    'Hiroshima Ken': 'Hiroshima',
+                    'Yamaguchi Ken': 'Yamaguchi',
+                    'Tokushima Ken': 'Tokushima',
+                    'Kagawa Ken': 'Kagawa',
+                    'Ehime Ken': 'Ehime',
+                    'Kochi Ken': 'Kochi',
+                    'Fukuoka Ken': 'Fukuoka',
+                    'Saga Ken': 'Saga',
+                    'Nagasaki Ken': 'Nagasaki',
+                    'Kumamoto Ken': 'Kumamoto',
+                    'Oita Ken': 'Oita',
+                    'Miyazaki Ken': 'Miyazaki',
+                    'Kagoshima Ken': 'Kagoshima',
+                    'Okinawa Ken': 'Okinawa'
+                };
+
+                this.translations = {
+                    en: {
+                        title: 'Japan Geography Explorer',
+                        subtitle: 'Interactive map of Japan\'s geography, history, and culture',
+                        information: 'Information',
+                        layers: 'Layers',
+                        filterOptions: 'Filter Options',
+                        selectFeature: 'Select a feature',
+                        clickFeature: 'Click on a feature to see details',
+                        basin: 'Basin',
+                        englishName: 'English name',
+                        japaneseName: 'Japanese name',
+                        prefectures: 'Prefectures',
+                        oldProvinces: 'Old Provinces',
+                        mountains: 'Mountains',
+                        rivers: 'Rivers',
+                        lakes: 'Lakes',
+                        mountainRanges: 'Mountain Ranges',
+                        sakeRice: 'Sake Rice',
+                        reset: 'Reset View',
+                        prefecture: 'Prefecture',
+                        region: 'Region',
+                        provinces: 'Provinces',
+                        province: 'Province',
+                        elevation: 'Elevation',
+                        length: 'Length',
+                        area: 'Area',
+                        production: 'Production',
+                        year: 'Year',
+                        parents: 'Parents',
+                        notes: 'Notes',
+                        total: 'Total',
+                        varieties: 'varieties',
+                        showTopVarieties: 'Show only top varieties',
+                        tonnesYear: 'tonnes/year',
+                        prefecturesCount: '47 prefectures',
+                        provincesCount: '69 historical provinces',
+                        mountainsCount: '62 mountains',
+                        riversCount: '43 rivers',
+                        lakesCount: '6 lakes',
+                        mountainRangesCount: '14 mountain ranges',
+                        sakeRiceCount: '97 varieties',
+                        rivers_lower: 'rivers',
+                        lakes_lower: 'lakes',
+                        mountains_lower: 'mountains'
+                    },
+                    ja: {
+                        title: '日本地理探索',
+                        subtitle: '日本の地理、歴史、文化のインタラクティブマップ',
+                        information: '情報',
+                        layers: 'レイヤー',
+                        filterOptions: 'フィルター',
+                        selectFeature: '項目を選択',
+                        clickFeature: '項目をクリックして詳細を表示',
+                        basin: '流域',
+                        englishName: '英語名',
+                        japaneseName: '日本語名',
+                        prefectures: '都道府県',
+                        oldProvinces: '旧国',
+                        mountains: '山',
+                        rivers: '川',
+                        lakes: '湖',
+                        mountainRanges: '山脈',
+                        sakeRice: '酒米',
+                        reset: '表示リセット',
+                        prefecture: '都道府県',
+                        region: '地方',
+                        provinces: '旧国',
+                        province: '旧国',
+                        elevation: '標高',
+                        length: '長さ',
+                        area: '面積',
+                        production: '生産量',
+                        year: '年',
+                        parents: '親品種',
+                        notes: '詳細',
+                        total: '合計',
+                        varieties: '品種',
+                        showTopVarieties: '主要品種のみ表示',
+                        tonnesYear: 'トン/年',
+                        prefecturesCount: '47都道府県',
+                        provincesCount: '69旧国',
+                        mountainsCount: '62の山',
+                        riversCount: '43の川',
+                        lakesCount: '6つの湖',
+                        mountainRangesCount: '14の山脈',
+                        sakeRiceCount: '97品種',
+                        rivers_lower: '川',
+                        lakes_lower: '湖',
+                        mountains_lower: '山'
+                    }
+                };
+
+                this.currentLanguage = 'en';
+
+                this.init();
+                this.setupZoomPan();
+            }
+
+            toggleLanguage() {
+                this.currentLanguage = this.currentLanguage === 'en' ? 'ja' : 'en';
+                this.updateUI();
+                this.renderMap();
+                this.showDefaultInfo(this.currentLayer);
+            }
+
+            t(key) {
+                return this.translations[this.currentLanguage][key] || key;
+            }
+
+            updateUI() {
+                const t = this.t.bind(this);
+
+                // Update header
+                document.querySelector('.header h1').textContent = t('title');
+                document.querySelector('.header p').textContent = t('subtitle');
+
+                // Update language toggle button
+                document.getElementById('langToggle').textContent = this.currentLanguage === 'en' ? '日本語' : 'EN';
+
+                // Update sidebar headings
+                const layersHeading = document.querySelector('.sidebar h2');
+                if (layersHeading) {
+                    layersHeading.textContent = t('layers');
+                }
+
+                const filterHeading = document.querySelector('#sakeRiceFilter h2');
+                if (filterHeading) {
+                    filterHeading.textContent = t('filterOptions');
+                }
+
+                const infoHeading = document.querySelector('.info-panel h2');
+                if (infoHeading) {
+                    infoHeading.textContent = t('information');
+                }
+
+                // Update layer buttons using data-layer-key attribute
+                const layerButtons = document.querySelectorAll('.layer-option');
+                const layerKeyMap = {
+                    'prefectures': { key: 'prefectures', count: 'prefecturesCount' },
+                    'old_provinces': { key: 'oldProvinces', count: 'provincesCount' },
+                    'mountains': { key: 'mountains', count: 'mountainsCount' },
+                    'rivers': { key: 'rivers', count: 'riversCount' },
+                    'lakes': { key: 'lakes', count: 'lakesCount' },
+                    'mountain_ranges': { key: 'mountainRanges', count: 'mountainRangesCount' },
+                    'sake_rice': { key: 'sakeRice', count: 'sakeRiceCount' }
+                };
+
+                layerButtons.forEach((btn) => {
+                    const layerKey = btn.getAttribute('data-layer-key');
+                    const nameEl = btn.querySelector('.name');
+                    const countEl = btn.querySelector('.count');
+
+                    if (layerKey && layerKeyMap[layerKey]) {
+                        if (nameEl) {
+                            nameEl.textContent = t(layerKeyMap[layerKey].key);
+                        }
+                        if (countEl) {
+                            countEl.textContent = t(layerKeyMap[layerKey].count);
+                        }
+                    }
+                });
+
+                // Update reset button
+                const resetBtn = document.querySelector('.zoom-btn[title="Reset"]');
+                if (resetBtn) {
+                    resetBtn.textContent = '⟲';
+                }
+
+                // Update checkbox label
+                const checkboxLabel = document.querySelector('.filter-checkbox');
+                if (checkboxLabel) {
+                    const checkbox = checkboxLabel.querySelector('input');
+                    checkboxLabel.innerHTML = '';
+                    checkboxLabel.appendChild(checkbox);
+                    const span = document.createElement('span');
+                    span.textContent = t('showTopVarieties');
+                    checkboxLabel.appendChild(span);
+                }
+            }
+
+            async init() {
+                await this.loadAllData();
+                this.createLayerControls();
+                this.renderMap();
+                document.getElementById('loading').style.display = 'none';
+            }
+
+            async loadAllData() {
+                // Use embedded data from japan_geo_data.js
+                if (typeof JAPAN_GEO_DATA === 'undefined') {
+                    alert('Error: Data file not loaded. Make sure japan_geo_data.js is in the same directory as index.html');
+                    return;
+                }
+
+                // Load metadata
+                this.metadata.prefectures = JAPAN_GEO_DATA.prefectures || [];
+                this.metadata.lakes = JAPAN_GEO_DATA.lakes || [];
+                this.metadata.rivers = JAPAN_GEO_DATA.rivers || [];
+                this.metadata.mountains = JAPAN_GEO_DATA.mountains || [];
+                this.metadata.old_provinces = JAPAN_GEO_DATA.old_provinces || [];
+                this.metadata.mountain_ranges = JAPAN_GEO_DATA.mountain_ranges || [];
+                this.metadata.sake_rice = JAPAN_GEO_DATA.sake_rice || [];
+
+                // Load geometry
+                this.geometry.prefectures = JAPAN_GEO_DATA.prefectures_geo || [];
+                this.geometry.old_provinces = JAPAN_GEO_DATA.old_provinces_geo || [];
+                this.geometry.lakes = JAPAN_GEO_DATA.lakes_geo || [];
+                this.geometry.rivers = JAPAN_GEO_DATA.rivers_geo || [];
+                this.geometry.mountains = JAPAN_GEO_DATA.mountains_geo || [];
+                this.geometry.mountain_ranges = JAPAN_GEO_DATA.mountain_ranges || [];
+                this.geometry.sake_rice = JAPAN_GEO_DATA.sake_rice || [];
+
+                console.log('Loaded embedded data successfully');
+                for (const [key, value] of Object.entries(this.geometry)) {
+                    console.log(`  ${key}: ${value.length} features`);
+                }
+            }
+
+
+            createLayerControls() {
+                const container = document.getElementById('layerControls');
+
+                // Define a fixed order for layers
+                const layerOrder = ['prefectures', 'old_provinces', 'rivers', 'lakes', 'mountains', 'mountain_ranges', 'sake_rice'];
+
+                layerOrder.forEach(key => {
+                    const layer = this.layers[key];
+                    if (!layer) return;
+
+                    const count = this.geometry[key] ? this.geometry[key].length : 0;
+
+                    const div = document.createElement('div');
+                    div.className = `layer-option ${layer.active ? 'active' : ''}`;
+                    div.setAttribute('data-layer-key', key);
+                    div.innerHTML = `
+                        <div class="name">${layer.name}</div>
+                        <div class="count">${count} features</div>
+                    `;
+
+                    div.addEventListener('click', () => {
+                        this.switchLayer(key);
+                    });
+
+                    container.appendChild(div);
+                });
+            }
+
+            switchLayer(layerKey) {
+                // Update active states
+                for (const key of Object.keys(this.layers)) {
+                    this.layers[key].active = (key === layerKey);
+                }
+
+                this.currentLayer = layerKey;
+
+                // Update UI
+                document.querySelectorAll('.layer-option').forEach((elem, index) => {
+                    const key = Object.keys(this.layers)[index];
+                    elem.classList.toggle('active', key === layerKey);
+                });
+
+                // Show/hide sake rice filter based on active layer
+                const filterSection = document.getElementById('sakeRiceFilter');
+                if (layerKey === 'sake_rice') {
+                    filterSection.style.display = 'block';
+                } else {
+                    filterSection.style.display = 'none';
+                }
+
+                // Clear filtered prefecture when switching layers
+                this.filteredPrefecture = null;
+
+                // Show default info for the layer
+                this.showDefaultInfo(layerKey);
+
+                // Re-render map
+                this.renderMap();
+            }
+
+            toggleImportanceFilter() {
+                const checkbox = document.getElementById('importanceFilter');
+                this.sakeRiceImportanceFilter = checkbox.checked;
+                // Update the list to reflect the filter
+                this.showSakeRiceList();
+                // Re-render map with filtered labels
+                this.renderMap();
+            }
+
+            renderMap() {
+                console.log('Rendering map, current layer:', this.currentLayer);
+                const mapGroup = document.getElementById('mapGroup');
+                mapGroup.innerHTML = '';
+
+                // Always show accurate Japan outline as base layer (using prefecture boundaries)
+                // Skip for prefectures and old_provinces since they show boundaries themselves
+                if (this.geometry.prefectures &&
+                    this.currentLayer !== 'prefectures' &&
+                    this.currentLayer !== 'old_provinces') {
+                    console.log('Rendering base outline:', this.geometry.prefectures.length, 'prefectures');
+                    // Make base outline interactive so users can click to filter by prefecture
+                    this.renderPolygons(mapGroup, this.geometry.prefectures, 'base-outline', true);
+                }
+
+                // Render active layer
+                const activeLayer = this.layers[this.currentLayer];
+                const data = this.geometry[this.currentLayer];
+
+                console.log('Active layer data:', data ? data.length : 0, 'features');
+                if (!data || data.length === 0) return;
+
+                switch (activeLayer.type) {
+                    case 'polygon':
+                        const className = this.currentLayer === 'prefectures' ? 'prefecture' :
+                                        this.currentLayer === 'old_provinces' ? 'old_province' :
+                                        this.currentLayer === 'mountain_ranges' ? 'mountain-range' :
+                                        this.currentLayer.slice(0, -1);
+                        this.renderPolygons(mapGroup, data, className, true);
+
+                        // Add labels for mountain ranges when viewing mountain_ranges layer
+                        if (this.currentLayer === 'mountain_ranges') {
+                            console.log('Rendering labels for mountain_ranges layer');
+                            // Filter mountain ranges by prefecture if one is selected
+                            let filteredRanges = data;
+                            if (this.filteredPrefecture) {
+                                filteredRanges = data.filter(item => {
+                                    const itemPrefecture = this.getItemPrefecture(item, 'mountain_ranges');
+                                    return this.prefecturesMatch(itemPrefecture, this.filteredPrefecture);
+                                });
+                            }
+                            this.renderMountainRangeLabels(mapGroup, filteredRanges);
+                        }
+                        break;
+                    case 'polyline':
+                        this.renderPolylines(mapGroup, data);
+                        break;
+                    case 'point':
+                        this.renderPoints(mapGroup, data);
+                        break;
+                    case 'label':
+                        // For label layers like sake rice, show prefecture outlines and render labels
+                        if (this.geometry.prefectures) {
+                            this.renderPolygons(mapGroup, this.geometry.prefectures, 'base-outline', true);
+                        }
+                        // Render sake rice labels
+                        if (this.currentLayer === 'sake_rice') {
+                            this.renderSakeRiceLabels(mapGroup);
+                        }
+                        break;
+                }
+            }
+
+            renderPolygons(svg, data, className, interactive) {
+                // Filter data by prefecture if one is selected
+                let filteredData = data;
+                if (this.filteredPrefecture) {
+                    if (className === 'lake') {
+                        filteredData = data.filter(item => {
+                            const itemPrefecture = this.getItemPrefecture(item, 'lakes');
+                            return this.prefecturesMatch(itemPrefecture, this.filteredPrefecture);
+                        });
+                    } else if (className === 'mountain-range') {
+                        filteredData = data.filter(item => {
+                            const itemPrefecture = this.getItemPrefecture(item, 'mountain_ranges');
+                            return this.prefecturesMatch(itemPrefecture, this.filteredPrefecture);
+                        });
+                    }
+                }
+
+                // Check if this is lakes layer for special label handling
+                const isLakesLayer = this.currentLayer === 'lakes';
+
+                // First pass: Render all polygon features
+                filteredData.forEach((item, index) => {
+                    const coords = item.Coordinates;
+                    if (!coords) return;
+
+                    const points = this.coordsToPoints(coords);
+                    if (points.length === 0) return;
+
+                    const pathData = points.map((p, i) =>
+                        `${i === 0 ? 'M' : 'L'} ${p.x},${p.y}`
+                    ).join(' ') + ' Z';
+
+                    const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+                    path.setAttribute('d', pathData);
+                    path.setAttribute('class', className);
+                    path.setAttribute('data-index', index);
+                    path.setAttribute('data-name', item.Name || '');
+
+                    // Apply filtered class if this prefecture is the filtered one
+                    if ((className === 'prefecture' || className === 'base-outline') &&
+                        this.filteredPrefecture && item.Name === this.filteredPrefecture) {
+                        path.classList.add('prefecture-filtered');
+                    }
+
+                    if (interactive) {
+                        path.addEventListener('click', (e) => {
+                            // If this is a prefecture or base-outline, set it as the filter
+                            if (className === 'prefecture' || className === 'base-outline') {
+                                e.stopPropagation();
+                                this.filteredPrefecture = item.Name;
+                                this.renderMap();
+                                // Show prefecture info with all its features
+                                this.showPrefectureInfo(item.Name);
+                            } else if (className === 'mountain-range') {
+                                // Toggle mountain range selection
+                                e.stopPropagation();
+                                if (this.selectedMountainRange === item.Name) {
+                                    this.selectedMountainRange = null;
+                                } else {
+                                    this.selectedMountainRange = item.Name;
+                                }
+                                this.renderMap();
+                                this.showInfo(item, this.currentLayer);
+                            } else {
+                                // Show info panel for non-prefecture elements
+                                this.showInfo(item, this.currentLayer);
+                            }
+                        });
+                    }
+
+                    // Apply selected class for mountain ranges
+                    if (className === 'mountain-range' && this.selectedMountainRange === item.Name) {
+                        path.classList.add('selected');
+                    }
+
+                    svg.appendChild(path);
+                });
+
+                // Second pass: Render labels
+                if (isLakesLayer && interactive && className === 'lake') {
+                    // Use smart labeling with leader lines for lakes (only for actual lakes, not base-outline)
+                    this.renderFeatureLabels(svg, filteredData, 'lake');
+                } else if ((className === 'prefecture' || className === 'old_province') && this.filteredPrefecture) {
+                    // Show label only for the selected prefecture/province
+                    const selectedItem = filteredData.find(item => item.Name === this.filteredPrefecture);
+                    if (selectedItem) {
+                        // Don't pass override name - let renderSimplePolygonLabels handle language mode
+                        this.renderSimplePolygonLabels(svg, [selectedItem]);
+                    }
+                }
+            }
+
+            renderSimplePolygonLabels(svg, data, overrideName = null) {
+                const labels = [];
+
+                data.forEach((item, index) => {
+                    const coords = item.Coordinates;
+                    if (!coords) return;
+
+                    const points = this.coordsToPoints(coords);
+                    if (points.length < 5) return;
+
+                    const center = this.calculateCenter(points);
+                    const area = this.calculateArea(points);
+
+                    // Determine font size based on area (for English mode)
+                    // In Japanese mode, use consistent large size for all prefectures
+                    let fontSize = 'text-label';
+                    if (this.currentLanguage === 'ja') {
+                        // Consistent large size for all prefecture labels in Japanese mode
+                        fontSize = 'text-label text-label-xlarge';
+                    } else {
+                        // Dynamic sizing for English mode based on area
+                        if (area > 15000) {
+                            fontSize = 'text-label text-label-xlarge';
+                        } else if (area > 6000) {
+                            fontSize = 'text-label text-label-large';
+                        }
+                    }
+
+                    // Use override name if provided, otherwise check language mode
+                    let displayName;
+                    if (overrideName) {
+                        displayName = overrideName;
+                    } else {
+                        // Use Japanese name if in Japanese mode and available
+                        displayName = this.currentLanguage === 'ja' && item['Japanese Name']
+                            ? item['Japanese Name']
+                            : (item.Name || item['Japanese Name'] || '');
+                    }
+
+                    labels.push({
+                        x: center.x,
+                        y: center.y,
+                        fontSize: fontSize,
+                        text: displayName,
+                        index: index
+                    });
+                });
+
+                // Render centered labels
+                labels.forEach(labelData => {
+                    const label = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+                    label.setAttribute('x', labelData.x);
+                    label.setAttribute('y', labelData.y);
+                    label.setAttribute('class', labelData.fontSize);
+                    label.setAttribute('text-anchor', 'middle');
+                    label.setAttribute('dominant-baseline', 'middle');
+                    label.setAttribute('data-index', labelData.index);
+                    label.textContent = labelData.text;
+                    svg.appendChild(label);
+                });
+            }
+
+            renderPolylines(svg, data) {
+                // Filter data by prefecture if one is selected
+                let filteredData = data;
+                if (this.filteredPrefecture) {
+                    console.log('Filtering rivers by prefecture:', this.filteredPrefecture);
+                    filteredData = data.filter(item => {
+                        const itemPrefecture = this.getItemPrefecture(item, 'rivers');
+                        const matches = this.prefecturesMatch(itemPrefecture, this.filteredPrefecture);
+                        if (matches) {
+                            console.log('  ✓ River matched:', item.Name, 'in', itemPrefecture);
+                        }
+                        return matches;
+                    });
+                    console.log('Filtered rivers:', filteredData.length, 'out of', data.length);
+                }
+
+                // Store data for dynamic label rendering
+                this.riverData = filteredData;
+
+                // First pass: Render all river lines
+                filteredData.forEach(item => {
+                    const coords = item.Coordinates;
+                    if (!coords) return;
+
+                    const points = this.coordsToPoints(coords);
+                    if (points.length === 0) return;
+
+                    const pathData = points.map((p, i) =>
+                        `${i === 0 ? 'M' : 'L'} ${p.x},${p.y}`
+                    ).join(' ');
+
+                    const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+                    path.setAttribute('d', pathData);
+                    path.setAttribute('class', 'river');
+                    path.setAttribute('data-river-name', item.Name);
+
+                    path.addEventListener('click', () => {
+                        // Remove selected class from all rivers
+                        document.querySelectorAll('.river.selected').forEach(r => {
+                            r.classList.remove('selected');
+                        });
+                        // Save and add selected class to clicked river
+                        this.selectedRiver = item.Name;
+                        path.classList.add('selected');
+                        this.showInfo(item, this.currentLayer);
+                    });
+
+                    svg.appendChild(path);
+                });
+
+                // Second pass: Render labels with smart placement
+                this.renderFeatureLabels(svg, filteredData, 'river');
+
+                // Restore selected river highlighting
+                if (this.selectedRiver) {
+                    const rivers = svg.querySelectorAll('.river');
+                    rivers.forEach(river => {
+                        const riverName = river.getAttribute('data-river-name');
+                        if (riverName === this.selectedRiver) {
+                            river.classList.add('selected');
+                        }
+                    });
+                }
+            }
+
+            renderPoints(svg, data) {
+                // Filter data by prefecture if one is selected
+                let filteredData = data;
+                if (this.filteredPrefecture) {
+                    filteredData = data.filter(item => {
+                        const itemPrefecture = this.getItemPrefecture(item, 'mountains');
+                        return this.prefecturesMatch(itemPrefecture, this.filteredPrefecture);
+                    });
+                }
+
+                // Store data for dynamic label rendering
+                this.mountainData = filteredData;
+
+                // First pass: Render all mountain points
+                filteredData.forEach(item => {
+                    const lat = parseFloat(item.Latitude);
+                    const lon = parseFloat(item.Longitude);
+
+                    if (isNaN(lat) || isNaN(lon)) return;
+
+                    const point = this.projectPoint(lat, lon);
+
+                    const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+                    circle.setAttribute('cx', point.x);
+                    circle.setAttribute('cy', point.y);
+                    circle.setAttribute('r', 5);
+                    circle.setAttribute('class', 'mountain');
+
+                    circle.addEventListener('click', () => {
+                        this.showInfo(item, this.currentLayer);
+                    });
+
+                    svg.appendChild(circle);
+                });
+
+                // Second pass: Render labels with smart placement
+                this.renderMountainLabels(svg);
+            }
+
+            renderFeatureLabels(svg, data, featureType) {
+                if (!data || data.length === 0) return;
+
+                // Calculate visible bounds based on current zoom/pan
+                const visibleBounds = this.getVisibleBounds();
+                const labelSpacing = 35;
+                const lineColor = '#FF1493'; // Deep pink for leader lines
+
+                // Collect features with their positions
+                const allFeatures = [];
+                data.forEach(item => {
+                    let point;
+
+                    if (featureType === 'river') {
+                        // For rivers, use midpoint
+                        const coords = item.Coordinates;
+                        if (!coords) return;
+                        const points = this.coordsToPoints(coords);
+                        if (points.length === 0) return;
+                        point = points[Math.floor(points.length / 2)];
+                    } else if (featureType === 'lake') {
+                        // For lakes, use center
+                        const coords = item.Coordinates;
+                        if (!coords) return;
+                        const points = this.coordsToPoints(coords);
+                        if (points.length === 0) return;
+                        point = this.calculateCenter(points);
+                    }
+
+                    // Only include features visible in viewport
+                    if (point && point.x >= visibleBounds.minX && point.x <= visibleBounds.maxX &&
+                        point.y >= visibleBounds.minY && point.y <= visibleBounds.maxY) {
+                        // Look up metadata to get Japanese name
+                        const layerKey = featureType === 'river' ? 'rivers' : featureType === 'lake' ? 'lakes' : featureType + 's';
+                        const metaItem = this.metadata[layerKey] ? this.metadata[layerKey].find(m => m.Name === item.Name) : null;
+                        const displayName = this.currentLanguage === 'ja' && metaItem && metaItem['Japanese Name']
+                            ? metaItem['Japanese Name']
+                            : (item.Name || (metaItem && metaItem['Japanese Name']) || '');
+                        allFeatures.push({
+                            point: point,
+                            text: displayName,
+                            item: metaItem || item
+                        });
+                    }
+                });
+
+                // Sort by Y position
+                allFeatures.sort((a, b) => a.point.y - b.point.y);
+
+                // Distribute to left and right sides
+                const visibleCenterX = (visibleBounds.minX + visibleBounds.maxX) / 2;
+                const leftFeatures = allFeatures.filter(f => f.point.x < visibleCenterX);
+                const rightFeatures = allFeatures.filter(f => f.point.x >= visibleCenterX);
+
+                leftFeatures.sort((a, b) => a.point.y - b.point.y);
+                rightFeatures.sort((a, b) => a.point.y - b.point.y);
+
+                // Render labels for each side
+                const labelMargin = 120;
+                this.placeFeatureLabels(svg, leftFeatures, true, visibleBounds, labelMargin, labelSpacing, lineColor, featureType);
+                this.placeFeatureLabels(svg, rightFeatures, false, visibleBounds, labelMargin, labelSpacing, lineColor, featureType);
+            }
+
+            placeFeatureLabels(svg, features, isLeftSide, visibleBounds, labelMargin, labelSpacing, lineColor, featureType) {
+                if (features.length === 0) return;
+
+                // Calculate margins proportional to visible bounds
+                const visibleWidth = visibleBounds.maxX - visibleBounds.minX;
+                const leftPanelProportion = 0.12;
+                const rightPanelProportion = 0.12;
+                const leftMargin = visibleWidth * leftPanelProportion;
+                const rightMargin = visibleWidth * rightPanelProportion;
+
+                const labelX = isLeftSide
+                    ? visibleBounds.minX + leftMargin
+                    : visibleBounds.maxX - rightMargin;
+
+                // Use simplified label positioning (at feature level or slightly offset)
+                let previousLabelY = visibleBounds.minY;
+
+                features.forEach((feature, index) => {
+                    const featureY = feature.point.y;
+                    const minAllowedY = previousLabelY + labelSpacing;
+                    let labelY = Math.max(featureY, minAllowedY);
+
+                    // Draw leader line
+                    const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+                    line.setAttribute('x1', feature.point.x);
+                    line.setAttribute('y1', feature.point.y);
+                    line.setAttribute('x2', labelX);
+                    line.setAttribute('y2', labelY);
+                    line.setAttribute('stroke', lineColor);
+                    line.setAttribute('stroke-width', '2');
+                    line.setAttribute('stroke-dasharray', '5,3');
+                    line.setAttribute('opacity', '0.7');
+                    line.setAttribute('class', `${featureType}-label-line`);
+                    svg.appendChild(line);
+
+                    // Draw clickable label
+                    const label = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+                    label.setAttribute('x', labelX);
+                    label.setAttribute('y', labelY);
+                    label.setAttribute('class', `text-label ${featureType}-label-text`);
+                    label.setAttribute('text-anchor', isLeftSide ? 'end' : 'start');
+                    label.setAttribute('dominant-baseline', 'middle');
+                    label.textContent = feature.text;
+
+                    // Make clickable
+                    label.addEventListener('click', () => {
+                        // If it's a river, select it
+                        if (featureType === 'river') {
+                            document.querySelectorAll('.river.selected').forEach(r => {
+                                r.classList.remove('selected');
+                            });
+                            this.selectedRiver = feature.item.Name;
+                            // Find and select the river path
+                            document.querySelectorAll('.river').forEach(r => {
+                                if (r.getAttribute('data-river-name') === feature.item.Name) {
+                                    r.classList.add('selected');
+                                }
+                            });
+                        }
+                        this.showInfo(feature.item, this.currentLayer);
+                    });
+
+                    svg.appendChild(label);
+                    previousLabelY = labelY;
+                });
+            }
+
+            renderMountainLabels(svg) {
+                if (!this.mountainData) return;
+
+                // Calculate visible bounds based on current zoom/pan
+                const visibleBounds = this.getVisibleBounds();
+                const labelSpacing = 35;
+                const lineColor = '#FF1493';
+                const labelMargin = 120;
+
+                // Collect all mountains with their coordinates
+                const allMountains = [];
+                this.mountainData.forEach(item => {
+                    const lat = parseFloat(item.Latitude);
+                    const lon = parseFloat(item.Longitude);
+                    if (isNaN(lat) || isNaN(lon)) return;
+
+                    const point = this.projectPoint(lat, lon);
+
+                    // Only include mountains that are visible in the current viewport
+                    if (point.x >= visibleBounds.minX && point.x <= visibleBounds.maxX &&
+                        point.y >= visibleBounds.minY && point.y <= visibleBounds.maxY) {
+                        // Look up metadata to get Japanese name
+                        const metaItem = this.metadata.mountains ? this.metadata.mountains.find(m => m.Name === item.Name) : null;
+                        const displayName = this.currentLanguage === 'ja' && metaItem && metaItem['Japanese Name']
+                            ? metaItem['Japanese Name']
+                            : (item.Name || (metaItem && metaItem['Japanese Name']) || '');
+                        allMountains.push({
+                            point: point,
+                            text: displayName,
+                            item: metaItem || item
+                        });
+                    }
+                });
+
+                // Calculate the center of visible area
+                const visibleCenterX = (visibleBounds.minX + visibleBounds.maxX) / 2;
+
+                // Simple split by X position (like rivers)
+                const leftMountains = allMountains.filter(m => m.point.x < visibleCenterX);
+                const rightMountains = allMountains.filter(m => m.point.x >= visibleCenterX);
+
+                // Sort each side by Y position
+                leftMountains.sort((a, b) => a.point.y - b.point.y);
+                rightMountains.sort((a, b) => a.point.y - b.point.y);
+
+                // Calculate label positions for each side
+                this.placeMountainLabels(svg, leftMountains, true, visibleBounds, labelMargin, labelSpacing, lineColor);
+                this.placeMountainLabels(svg, rightMountains, false, visibleBounds, labelMargin, labelSpacing, lineColor);
+            }
+
+            placeMountainLabels(svg, mountains, isLeftSide, visibleBounds, labelMargin, labelSpacing, lineColor) {
+                if (mountains.length === 0) return;
+
+                // Calculate margins proportional to visible bounds
+                const visibleWidth = visibleBounds.maxX - visibleBounds.minX;
+                const leftPanelProportion = 0.12;
+                const rightPanelProportion = 0.12;
+                const leftMargin = visibleWidth * leftPanelProportion;
+                const rightMargin = visibleWidth * rightPanelProportion;
+
+                const labelX = isLeftSide
+                    ? visibleBounds.minX + leftMargin
+                    : visibleBounds.maxX - rightMargin;
+
+                // Use smart label planning to allow above-placement and prevent overlaps
+                const labelPositions = this.planLabelPositions(mountains, visibleBounds, labelSpacing);
+
+                mountains.forEach((mountain, index) => {
+                    const labelY = labelPositions[index];
+
+                    // Draw leader line (can point up or down)
+                    const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+                    line.setAttribute('x1', mountain.point.x);
+                    line.setAttribute('y1', mountain.point.y);
+                    line.setAttribute('x2', labelX);
+                    line.setAttribute('y2', labelY);
+                    line.setAttribute('stroke', lineColor);
+                    line.setAttribute('stroke-width', '2');
+                    line.setAttribute('stroke-dasharray', '5,3');
+                    line.setAttribute('opacity', '0.7');
+                    line.setAttribute('class', 'mountain-label-line');
+                    svg.appendChild(line);
+
+                    // Draw label (clickable)
+                    const label = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+                    label.setAttribute('x', labelX);
+                    label.setAttribute('y', labelY);
+                    label.setAttribute('class', 'text-label mountain-label-text');
+                    label.setAttribute('text-anchor', isLeftSide ? 'end' : 'start');
+                    label.setAttribute('dominant-baseline', 'middle');
+                    label.setAttribute('cursor', 'pointer');
+                    label.textContent = mountain.text;
+
+                    // Make label clickable
+                    label.addEventListener('click', () => {
+                        // Highlight the prefecture
+                        const prefecture = this.getItemPrefecture(mountain.item, 'mountains');
+                        if (prefecture) {
+                            this.filteredPrefecture = prefecture;
+                            this.renderMap();
+                        }
+                        this.showInfo(mountain.item, this.currentLayer);
+                    });
+
+                    svg.appendChild(label);
+                });
+            }
+
+            planLabelPositions(mountains, visibleBounds, labelSpacing) {
+                const positions = [];
+                const count = mountains.length;
+
+                if (count === 0) return positions;
+
+                const topMargin = 30;
+                const bottomMargin = 30;
+                const availableTop = visibleBounds.minY + topMargin;
+                const availableBottom = visibleBounds.maxY - bottomMargin;
+
+                // Sophisticated algorithm:
+                // 1. Identify clusters of mountains
+                // 2. For clusters, spread labels above and below aggressively
+                // 3. Maintain top-to-bottom ordering to prevent crossing
+
+                // First pass: identify which mountains are in clusters
+                const clusterThreshold = labelSpacing * 3;
+                const inCluster = new Array(count).fill(false);
+
+                for (let i = 0; i < count - 1; i++) {
+                    const gap = mountains[i + 1].point.y - mountains[i].point.y;
+                    if (gap < clusterThreshold) {
+                        inCluster[i] = true;
+                        inCluster[i + 1] = true;
+                    }
+                }
+
+                // Second pass: place labels with smart above-placement strategy
+                let previousLabelY = availableTop - labelSpacing;
+
+                mountains.forEach((mountain, index) => {
+                    const mountainY = mountain.point.y;
+                    const minAllowedY = previousLabelY + labelSpacing;
+                    let labelY;
+
+                    // Check gap to next mountain to determine strategy
+                    const nextGap = index < count - 1
+                        ? mountains[index + 1].point.y - mountainY
+                        : Infinity;
+                    const isNextClose = nextGap < labelSpacing * 2.5;
+
+                    // If in cluster or next mountain is close, strongly prefer above-placement
+                    if (inCluster[index] || isNextClose) {
+                        // AGGRESSIVE ABOVE-PLACEMENT for clustered areas
+                        const aboveCandidates = [
+                            mountainY - labelSpacing * 2.0,
+                            mountainY - labelSpacing * 3.0,
+                            mountainY - labelSpacing * 1.5,
+                            mountainY - labelSpacing * 4.0,
+                            mountainY - labelSpacing * 0.8,
+                            mountainY,  // At mountain as last resort
+                        ];
+
+                        let bestY = null;
+                        for (const candidateY of aboveCandidates) {
+                            if (candidateY >= minAllowedY && candidateY <= availableBottom) {
+                                bestY = candidateY;
+                                break;  // Take first valid above position
+                            }
+                        }
+
+                        labelY = bestY !== null ? bestY : minAllowedY;
+                    } else {
+                        // Not clustered - prefer at mountain but with some flexibility
+                        const candidates = [
+                            mountainY,                          // At mountain (ideal for non-clustered)
+                            mountainY - labelSpacing * 0.5,     // Slightly above
+                            mountainY - labelSpacing * 1.5,     // More above
+                            mountainY + labelSpacing * 0.5,     // Slightly below
+                        ];
+
+                        let bestY = null;
+                        let bestDistance = Infinity;
+
+                        for (const candidateY of candidates) {
+                            if (candidateY >= minAllowedY && candidateY <= availableBottom) {
+                                const distance = Math.abs(candidateY - mountainY);
+                                if (distance < bestDistance) {
+                                    bestDistance = distance;
+                                    bestY = candidateY;
+                                }
+                            }
+                        }
+
+                        labelY = bestY !== null ? bestY : minAllowedY;
+                    }
+
+                    positions.push(labelY);
+                    previousLabelY = labelY;
+                });
+
+                return positions;
+            }
+
+            getVisibleBounds() {
+                // Calculate visible bounds based on current zoom and pan
+                const viewBoxWidth = 1400;
+                const viewBoxHeight = 1400;
+                const viewBoxX = -200;
+                const viewBoxY = 0;
+
+                // Account for zoom and pan transforms
+                const minX = viewBoxX - (this.panX / this.zoom);
+                const maxX = minX + (viewBoxWidth / this.zoom);
+                const minY = viewBoxY - (this.panY / this.zoom);
+                const maxY = minY + (viewBoxHeight / this.zoom);
+
+                return { minX, maxX, minY, maxY };
+            }
+
+            coordsToPoints(coordString) {
+                const pairs = coordString.split(';');
+                return pairs.map(pair => {
+                    const [lat, lon] = pair.split(',').map(parseFloat);
+                    if (isNaN(lat) || isNaN(lon)) return null;
+                    return this.projectPoint(lat, lon);
+                }).filter(p => p !== null);
+            }
+
+            projectPoint(lat, lon) {
+                const x = ((lon - this.bounds.minLon) / (this.bounds.maxLon - this.bounds.minLon)) * 1000;
+                const y = (1 - (lat - this.bounds.minLat) / (this.bounds.maxLat - this.bounds.minLat)) * 1400;
+                return { x, y };
+            }
+
+            calculateCenter(points) {
+                const sum = points.reduce((acc, p) => {
+                    acc.x += p.x;
+                    acc.y += p.y;
+                    return acc;
+                }, { x: 0, y: 0 });
+
+                return {
+                    x: sum.x / points.length,
+                    y: sum.y / points.length
+                };
+            }
+
+            calculateArea(points) {
+                // Calculate approximate area using bounding box
+                if (points.length < 3) return 0;
+
+                const xs = points.map(p => p.x);
+                const ys = points.map(p => p.y);
+                const width = Math.max(...xs) - Math.min(...xs);
+                const height = Math.max(...ys) - Math.min(...ys);
+
+                return width * height;
+            }
+
+            getItemPrefecture(item, layerKey) {
+                // Helper method to get prefecture from metadata (not geometry)
+                // First try to get it directly from the item
+                let prefecture = item.Prefecture ||
+                                item.Prefectures ||
+                                item[' Prefecture'] ||
+                                item['Prefecture '] ||
+                                item[' Prefecture '] || '';
+
+                // If not found, look it up in metadata by name
+                if (!prefecture && layerKey && this.metadata[layerKey]) {
+                    const metaItem = this.metadata[layerKey].find(m =>
+                        m.Name === item.Name || m['Japanese Name'] === item['Japanese Name']
+                    );
+                    if (metaItem) {
+                        prefecture = metaItem.Prefecture ||
+                                    metaItem.Prefectures ||
+                                    metaItem[' Prefecture'] ||
+                                    metaItem['Prefecture '] ||
+                                    metaItem[' Prefecture '] || '';
+                    }
+                }
+
+                // Trim any whitespace from the value
+                const result = typeof prefecture === 'string' ? prefecture.trim() : '';
+                if (!result) {
+                    console.log('  Warning: No prefecture found for item:', item.Name);
+                }
+                return result;
+            }
+
+            normalizePrefectureName(name) {
+                // Use mapping table to convert geometry names to metadata names
+                if (!name) return '';
+                const trimmed = name.trim();
+                // If it's in the map, return the mapped value; otherwise return as-is
+                return this.prefectureMap[trimmed] || trimmed;
+            }
+
+            prefecturesMatch(name1, name2) {
+                // Handle semicolon-separated lists (e.g., "Kumamoto;Oita;Fukuoka;Saga")
+                const prefectures1 = name1.split(';').map(p => this.normalizePrefectureName(p.trim()));
+                const prefectures2 = name2.split(';').map(p => this.normalizePrefectureName(p.trim()));
+
+                // Check if any prefecture from list1 matches any from list2
+                for (const pref1 of prefectures1) {
+                    for (const pref2 of prefectures2) {
+                        if (pref1 === pref2) {
+                            console.log('  Comparing:', name1, 'vs', name2, '→ Match:', pref1);
+                            return true;
+                        }
+                    }
+                }
+                console.log('  Comparing:', name1, 'vs', name2, '→ No match');
+                return false;
+            }
+
+            showPrefectureInfo(prefectureName) {
+                const infoPanel = document.getElementById('infoContent');
+
+                // Check if we're viewing old provinces
+                if (this.currentLayer === 'old_provinces') {
+                    // Find the province in metadata
+                    const provinceData = (this.metadata.old_provinces || []).find(p => p.Name === prefectureName);
+
+                    let html = '<div class="info-card">';
+                    html += `<h3>${prefectureName}</h3>`;
+                    if (provinceData && provinceData['Japanese Name']) {
+                        html += `<p style="font-size: 18px; color: #86868b; margin-top: 4px;">${provinceData['Japanese Name']}</p>`;
+                    }
+                    html += '</div>';
+
+                    if (provinceData) {
+                        // Show region
+                        if (provinceData.Region) {
+                            html += '<div class="info-card">';
+                            html += `<h3>Region</h3>`;
+                            html += `<p>${provinceData.Region}</p>`;
+                            html += '</div>';
+                        }
+
+                        // Show modern prefectures
+                        if (provinceData.Prefectures) {
+                            const prefectures = provinceData.Prefectures.split(';');
+                            html += '<div class="info-card">';
+                            html += `<h3>Modern Prefecture${prefectures.length > 1 ? 's' : ''}</h3>`;
+                            html += '<div style="max-height: 200px; overflow-y: auto;">';
+                            prefectures.forEach(pref => {
+                                html += `<div style="padding: 4px 0; border-bottom: 1px solid #e8e8ed;">`;
+                                html += `<strong>${pref.trim()}</strong>`;
+                                html += '</div>';
+                            });
+                            html += '</div></div>';
+                        }
+                    } else {
+                        html += '<div class="info-card">';
+                        html += '<p style="color: #86868b;">Province information not found</p>';
+                        html += '</div>';
+                    }
+
+                    infoPanel.innerHTML = html;
+                    return;
+                }
+
+                // For prefectures, show features (rivers, mountains, lakes)
+                const normalizedName = this.normalizePrefectureName(prefectureName);
+
+                // Find the prefecture in metadata to get additional info
+                // Try exact match first, then normalized match
+                let prefectureData = (this.metadata.prefectures || []).find(p => p.Name === prefectureName);
+                if (!prefectureData) {
+                    prefectureData = (this.metadata.prefectures || []).find(p =>
+                        this.normalizePrefectureName(p.Name) === normalizedName
+                    );
+                }
+
+                console.log('Prefecture lookup:', prefectureName, 'normalized:', normalizedName, 'found:', prefectureData);
+
+                // Compact info - all in one box
+                let html = '<div class="info-card">';
+                html += `<div style="font-size: 15px; font-weight: 600; margin-bottom: 6px;">${normalizedName}`;
+                if (prefectureData && prefectureData['Japanese Name']) {
+                    html += ` <span style="color: #86868b; font-weight: 400;">${prefectureData['Japanese Name']}</span>`;
+                }
+                html += '</div>';
+
+                // Region on same line
+                if (prefectureData && prefectureData.Region) {
+                    html += `<div style="font-size: 12px; color: #1d1d1f; margin-bottom: 4px;">`;
+                    html += `Region: ${prefectureData.Region}`;
+                    if (prefectureData['Region Kanji']) {
+                        html += ` ${prefectureData['Region Kanji']}`;
+                    }
+                    html += '</div>';
+                }
+
+                // Old provinces on one line
+                if (prefectureData && prefectureData['Old Provinces']) {
+                    html += `<div style="font-size: 12px; color: #1d1d1f;">`;
+                    html += `Province${prefectureData['Old Provinces'].includes(';') ? 's' : ''}: ${prefectureData['Old Provinces'].replace(/;/g, ', ')}`;
+                    html += '</div>';
+                }
+                html += '</div>';
+
+                // Get rivers in this prefecture
+                const rivers = (this.metadata.rivers || []).filter(r => {
+                    const riverPref = this.getItemPrefecture(r, 'rivers');
+                    return this.prefecturesMatch(riverPref, prefectureName);
+                });
+
+                // Get mountains in this prefecture
+                const mountains = (this.metadata.mountains || []).filter(m => {
+                    const mountainPref = this.getItemPrefecture(m, 'mountains');
+                    return this.prefecturesMatch(mountainPref, prefectureName);
+                });
+
+                // Get lakes in this prefecture
+                const lakes = (this.metadata.lakes || []).filter(l => {
+                    const lakePref = this.getItemPrefecture(l, 'lakes');
+                    return this.prefecturesMatch(lakePref, prefectureName);
+                });
+
+                // Get sake rice in this prefecture
+                const sakeRice = (this.metadata.sake_rice || []).filter(s => {
+                    const sakePref = this.getItemPrefecture(s, 'sake_rice');
+                    return this.prefecturesMatch(sakePref, prefectureName);
+                });
+
+                // Rivers
+                if (rivers.length > 0) {
+                    html += '<div class="info-card">';
+                    html += `<h3>Rivers (${rivers.length})</h3>`;
+                    html += '<div style="max-height: 200px; overflow-y: auto;">';
+                    rivers.forEach(river => {
+                        html += `<div style="padding: 4px 0; border-bottom: 1px solid #e8e8ed;">`;
+                        html += `<strong>${river.Name}</strong>`;
+                        if (river.Length) html += ` - ${river.Length} km`;
+                        html += '</div>';
+                    });
+                    html += '</div></div>';
+                }
+
+                // Mountains
+                if (mountains.length > 0) {
+                    html += '<div class="info-card">';
+                    html += `<h3>Mountains (${mountains.length})</h3>`;
+                    html += '<div style="max-height: 200px; overflow-y: auto;">';
+                    mountains.forEach(mountain => {
+                        html += `<div style="padding: 4px 0; border-bottom: 1px solid #e8e8ed;">`;
+                        html += `<strong>${mountain.Name}</strong>`;
+                        if (mountain.Elevation) html += ` - ${mountain.Elevation}m`;
+                        html += '</div>';
+                    });
+                    html += '</div></div>';
+                }
+
+                // Lakes
+                if (lakes.length > 0) {
+                    html += '<div class="info-card">';
+                    html += `<h3>Lakes (${lakes.length})</h3>`;
+                    html += '<div style="max-height: 200px; overflow-y: auto;">';
+                    lakes.forEach(lake => {
+                        html += `<div style="padding: 4px 0; border-bottom: 1px solid #e8e8ed;">`;
+                        html += `<strong>${lake.Name}</strong>`;
+                        html += '</div>';
+                    });
+                    html += '</div></div>';
+                }
+
+                // Sake Rice - make clickable for details
+                if (sakeRice.length > 0) {
+                    html += '<div class="info-card">';
+                    html += `<h3>Sake Rice (${sakeRice.length})</h3>`;
+                    html += '<div style="max-height: 200px; overflow-y: auto;">';
+                    sakeRice.forEach(rice => {
+                        html += `<div style="padding: 6px 0; border-bottom: 1px solid #e8e8ed; cursor: pointer;" onclick="app.showSakeRiceDetail('${rice.Name}')">`;
+                        html += `<strong style="color: #007aff;">${rice.Name}</strong>`;
+                        if (rice.Year) html += ` <span style="color: #86868b;">- ${rice.Year}</span>`;
+                        html += '</div>';
+                    });
+                    html += '</div></div>';
+                }
+
+                if (rivers.length === 0 && mountains.length === 0 && lakes.length === 0 && sakeRice.length === 0) {
+                    html += '<div class="info-card">';
+                    html += '<p style="color: #86868b;">No features found in this prefecture</p>';
+                    html += '</div>';
+                }
+
+                infoPanel.innerHTML = html;
+            }
+
+            renderSakeRiceLabels(svg) {
+                const sakeRiceData = this.metadata.sake_rice || [];
+                const prefectureGeo = this.geometry.prefectures || [];
+
+                // Create labels with prefecture locations
+                const labels = [];
+
+                sakeRiceData.forEach(rice => {
+                    const prefecture = this.getItemPrefecture(rice, 'sake_rice');
+                    if (!prefecture) return;
+
+                    // Filter by selected prefecture if one is set
+                    if (this.filteredPrefecture && !this.prefecturesMatch(prefecture, this.filteredPrefecture)) {
+                        return;
+                    }
+
+                    // Find the prefecture geometry
+                    const prefGeo = prefectureGeo.find(p =>
+                        this.normalizePrefectureName(p.Name) === this.normalizePrefectureName(prefecture)
+                    );
+
+                    if (!prefGeo || !prefGeo.Coordinates) return;
+
+                    const points = this.coordsToPoints(prefGeo.Coordinates);
+                    if (points.length === 0) return;
+
+                    const center = this.calculateCenter(points);
+
+                    // Use Japanese name if in Japanese mode and available
+                    const displayName = this.currentLanguage === 'ja' && rice['Japanese Name']
+                        ? rice['Japanese Name']
+                        : (rice.Name || rice['Japanese Name'] || '');
+
+                    labels.push({
+                        x: center.x,
+                        y: center.y,
+                        text: displayName,
+                        data: rice,
+                        prefecture: prefecture
+                    });
+                });
+
+                // Render labels with smart positioning (like rivers)
+                this.renderSakeRiceFeatureLabels(svg, labels);
+            }
+
+            renderSakeRiceFeatureLabels(svg, labels) {
+                // Filter by importance if filter is active
+                let filteredLabels = labels;
+                console.log('Sake rice filter active:', this.sakeRiceImportanceFilter, 'Total labels:', labels.length);
+                if (this.sakeRiceImportanceFilter) {
+                    filteredLabels = labels.filter(l => parseInt(l.data.Importance) === 1);
+                    console.log('Filtered to importance=1:', filteredLabels.length);
+                }
+
+                // Calculate visible bounds
+                const visibleBounds = this.getVisibleBounds();
+                const labelSpacing = 35;
+                const lineColor = '#ff9500'; // Orange for sake rice
+
+                // Separate by side based on X position
+                const visibleCenterX = (visibleBounds.minX + visibleBounds.maxX) / 2;
+                const leftLabels = filteredLabels.filter(l => l.x < visibleCenterX);
+                const rightLabels = filteredLabels.filter(l => l.x >= visibleCenterX);
+
+                // Sort each side by Y position
+                leftLabels.sort((a, b) => a.y - b.y);
+                rightLabels.sort((a, b) => a.y - b.y);
+
+                // Render labels for each side using the same approach as rivers
+                const labelMargin = 120;
+                this.placeSakeRiceLabels(svg, leftLabels, true, visibleBounds, labelMargin, labelSpacing, lineColor);
+                this.placeSakeRiceLabels(svg, rightLabels, false, visibleBounds, labelMargin, labelSpacing, lineColor);
+            }
+
+            placeSakeRiceLabels(svg, labels, isLeftSide, visibleBounds, labelMargin, labelSpacing, lineColor) {
+                if (labels.length === 0) return;
+
+                // Calculate margins proportional to visible bounds
+                const visibleWidth = visibleBounds.maxX - visibleBounds.minX;
+                const leftPanelProportion = 0.12;
+                const rightPanelProportion = 0.12;
+                const leftMargin = visibleWidth * leftPanelProportion;
+                const rightMargin = visibleWidth * rightPanelProportion;
+
+                const labelX = isLeftSide
+                    ? visibleBounds.minX + leftMargin
+                    : visibleBounds.maxX - rightMargin;
+
+                // Use simplified label positioning
+                let previousLabelY = visibleBounds.minY;
+
+                labels.forEach((label, index) => {
+                    const featureY = label.y;
+                    const minAllowedY = previousLabelY + labelSpacing;
+                    let labelY = Math.max(featureY, minAllowedY);
+
+                    // Draw leader line
+                    const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+                    line.setAttribute('x1', label.x);
+                    line.setAttribute('y1', label.y);
+                    line.setAttribute('x2', labelX);
+                    line.setAttribute('y2', labelY);
+                    line.setAttribute('stroke', lineColor);
+                    line.setAttribute('stroke-width', '2');
+                    line.setAttribute('stroke-dasharray', '5,3');
+                    line.setAttribute('opacity', '0.7');
+                    line.setAttribute('class', 'sake-rice-label-line');
+                    svg.appendChild(line);
+
+                    // Draw clickable label (using text-label class like rivers)
+                    const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+                    text.setAttribute('x', labelX);
+                    text.setAttribute('y', labelY);
+                    text.setAttribute('class', 'text-label sake-rice-label-text');
+                    text.setAttribute('text-anchor', isLeftSide ? 'end' : 'start');
+                    text.setAttribute('dominant-baseline', 'middle');
+                    text.textContent = label.text;
+
+                    // Make clickable
+                    text.addEventListener('click', () => {
+                        this.showSakeRiceDetail(label.data.Name);
+                    });
+
+                    svg.appendChild(text);
+                    previousLabelY = labelY;
+                });
+            }
+
+            renderMountainRangeLabels(svg, ranges) {
+                if (!ranges || ranges.length === 0) {
+                    console.log('No mountain ranges to label');
+                    return;
+                }
+
+                console.log('renderMountainRangeLabels called with', ranges.length, 'mountain ranges');
+
+                // Remove any existing mountain range labels first to prevent duplicates
+                const existingLabels = svg.querySelectorAll('.mountain-range-label-text, .mountain-range-label-line');
+                if (existingLabels.length > 0) {
+                    console.log('Removing', existingLabels.length, 'existing mountain range labels');
+                    existingLabels.forEach(el => el.remove());
+                }
+
+                const visibleBounds = this.getVisibleBounds();
+                const labelSpacing = 35;
+                const lineColor = '#8B4513';
+
+                // Collect all ranges with their center points
+                const rangeFeatures = [];
+                ranges.forEach(range => {
+                    const coords = range.Coordinates;
+                    if (!coords) return;
+
+                    const points = this.coordsToPoints(coords);
+                    if (points.length === 0) return;
+
+                    const center = this.calculateCenter(points);
+
+                    // Use Japanese name if in Japanese mode and available
+                    const displayName = this.currentLanguage === 'ja' && range['Japanese Name']
+                        ? range['Japanese Name']
+                        : (range.Name || range['Japanese Name'] || '');
+
+                    rangeFeatures.push({
+                        point: center,
+                        text: displayName,
+                        item: range
+                    });
+                });
+
+                console.log('Created', rangeFeatures.length, 'range features');
+
+                // Separate by side based on X position
+                const visibleCenterX = (visibleBounds.minX + visibleBounds.maxX) / 2;
+                const leftRanges = rangeFeatures.filter(r => r.point.x < visibleCenterX);
+                const rightRanges = rangeFeatures.filter(r => r.point.x >= visibleCenterX);
+
+                console.log('Left ranges:', leftRanges.length, 'Right ranges:', rightRanges.length);
+
+                // Sort each side by Y position
+                leftRanges.sort((a, b) => a.point.y - b.point.y);
+                rightRanges.sort((a, b) => a.point.y - b.point.y);
+
+                // Render labels for each side
+                const labelMargin = 120;
+                this.placeMountainRangeLabels(svg, leftRanges, true, visibleBounds, labelMargin, labelSpacing, lineColor);
+                this.placeMountainRangeLabels(svg, rightRanges, false, visibleBounds, labelMargin, labelSpacing, lineColor);
+
+                console.log('Finished rendering mountain range labels - total labels created:', leftRanges.length + rightRanges.length);
+            }
+
+            placeMountainRangeLabels(svg, ranges, isLeftSide, visibleBounds, labelMargin, labelSpacing, lineColor) {
+                if (ranges.length === 0) return;
+
+                // Calculate margins proportional to visible bounds
+                const visibleWidth = visibleBounds.maxX - visibleBounds.minX;
+                const leftPanelProportion = 0.12;
+                const rightPanelProportion = 0.12;
+                const leftMargin = visibleWidth * leftPanelProportion;
+                const rightMargin = visibleWidth * rightPanelProportion;
+
+                const labelX = isLeftSide
+                    ? visibleBounds.minX + leftMargin
+                    : visibleBounds.maxX - rightMargin;
+
+                // Use simplified label positioning
+                let previousLabelY = visibleBounds.minY;
+
+                ranges.forEach((range, index) => {
+                    const featureY = range.point.y;
+                    const minAllowedY = previousLabelY + labelSpacing;
+                    let labelY = Math.max(featureY, minAllowedY);
+
+                    // Draw leader line
+                    const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+                    line.setAttribute('x1', range.point.x);
+                    line.setAttribute('y1', range.point.y);
+                    line.setAttribute('x2', labelX);
+                    line.setAttribute('y2', labelY);
+                    line.setAttribute('stroke', lineColor);
+                    line.setAttribute('stroke-width', '2');
+                    line.setAttribute('stroke-dasharray', '5,3');
+                    line.setAttribute('opacity', '0.7');
+                    line.setAttribute('class', 'mountain-range-label-line');
+                    svg.appendChild(line);
+
+                    // Draw clickable label (using text-label class)
+                    const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+                    text.setAttribute('x', labelX);
+                    text.setAttribute('y', labelY);
+                    text.setAttribute('class', 'text-label mountain-range-label-text');
+                    text.setAttribute('text-anchor', isLeftSide ? 'end' : 'start');
+                    text.setAttribute('dominant-baseline', 'middle');
+                    text.textContent = range.text;
+
+                    // Make clickable
+                    text.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        // Toggle mountain range selection
+                        if (this.selectedMountainRange === range.item.Name) {
+                            this.selectedMountainRange = null;
+                        } else {
+                            this.selectedMountainRange = range.item.Name;
+                        }
+                        // Highlight the prefecture
+                        const prefecture = this.getItemPrefecture(range.item, 'mountain_ranges');
+                        if (prefecture) {
+                            this.filteredPrefecture = prefecture;
+                        }
+                        this.renderMap();
+                        this.showInfo(range.item, 'mountain_ranges');
+                    });
+
+                    svg.appendChild(text);
+                    previousLabelY = labelY;
+                });
+            }
+
+            showDefaultInfo(layerKey) {
+                const infoPanel = document.getElementById('infoContent');
+                const t = this.t.bind(this);
+
+                switch(layerKey) {
+                    case 'sake_rice':
+                        this.showSakeRiceList();
+                        break;
+                    case 'mountains':
+                        this.showMountainsList();
+                        break;
+                    case 'rivers':
+                        this.showRiversList();
+                        break;
+                    case 'lakes':
+                        this.showLakesList();
+                        break;
+                    case 'mountain_ranges':
+                        this.showMountainRangesList();
+                        break;
+                    default:
+                        infoPanel.innerHTML = `<div class="info-card"><h3>${t('selectFeature')}</h3><p style="color: #86868b;">${t('clickFeature')}</p></div>`;
+                }
+            }
+
+            showSakeRiceList() {
+                const infoPanel = document.getElementById('infoContent');
+                let sakeRiceData = (this.metadata.sake_rice || []).slice();
+                const t = this.t.bind(this);
+
+                // Filter by importance if filter is active
+                if (this.sakeRiceImportanceFilter) {
+                    sakeRiceData = sakeRiceData.filter(r => parseInt(r.Importance) === 1);
+                }
+
+                // Sort by production tonnage (descending)
+                sakeRiceData.sort((a, b) => {
+                    const aProduction = parseFloat(a.Production_Tonnes) || 0;
+                    const bProduction = parseFloat(b.Production_Tonnes) || 0;
+                    return bProduction - aProduction;
+                });
+
+                let html = '<div class="info-card">';
+                html += `<h3>${t('sakeRice')} ${t('varieties')}</h3>`;
+                html += `<p style="color: #86868b; margin-bottom: 8px;">${t('total')}: ${sakeRiceData.length} ${t('varieties')}</p>`;
+
+                if (sakeRiceData.length > 0) {
+                    html += '<div style="max-height: calc(100vh - 250px); overflow-y: auto;">';
+
+                    sakeRiceData.forEach((rice, index) => {
+                        // Use Japanese name if in Japanese mode and available
+                        const displayName = this.currentLanguage === 'ja' && rice['Japanese Name']
+                            ? rice['Japanese Name']
+                            : (rice.Name || rice['Japanese Name'] || '');
+
+                        html += '<div style="cursor: pointer; padding: 6px 0; border-bottom: 1px solid #e8e8ed;" onclick="app.showSakeRiceDetail(\'' + rice.Name + '\')">';
+                        html += `<div style="font-size: 12px; font-weight: 600;">${index + 1}. ${displayName}`;
+                        if (rice.Production_Tonnes) {
+                            html += ` <span style="color: #86868b; font-weight: 400;">(${rice.Production_Tonnes}t)</span>`;
+                        }
+                        html += '</div>';
+                        if (rice.Prefecture) {
+                            html += `<div style="color: #007aff; font-size: 10px; margin-top: 2px;">📍 ${rice.Prefecture}</div>`;
+                        }
+                        html += '</div>';
+                    });
+
+                    html += '</div>';
+                }
+                html += '</div>';
+
+                infoPanel.innerHTML = html;
+            }
+
+            showMountainsList() {
+                const infoPanel = document.getElementById('infoContent');
+                const mountainsData = (this.metadata.mountains || []).slice();
+                const t = this.t.bind(this);
+
+                // Sort by elevation (descending)
+                mountainsData.sort((a, b) => {
+                    const aElev = parseFloat(a.Elevation) || 0;
+                    const bElev = parseFloat(b.Elevation) || 0;
+                    return bElev - aElev;
+                });
+
+                let html = '<div class="info-card">';
+                html += `<h3>${t('mountains')}</h3>`;
+                html += `<p style="color: #86868b; margin-bottom: 8px;">${t('total')}: ${mountainsData.length} ${t('mountains_lower')}</p>`;
+
+                if (mountainsData.length > 0) {
+                    html += '<div style="max-height: calc(100vh - 250px); overflow-y: auto;">';
+
+                    mountainsData.forEach((mountain, index) => {
+                        // Use Japanese name if in Japanese mode and available
+                        const displayName = this.currentLanguage === 'ja' && mountain['Japanese Name']
+                            ? mountain['Japanese Name']
+                            : (mountain.Name || mountain['Japanese Name'] || '');
+
+                        html += '<div style="cursor: pointer; padding: 6px 0; border-bottom: 1px solid #e8e8ed;" onclick="app.selectMountain(\'' + mountain.Name.replace(/'/g, "\\'") + '\')">';
+                        html += `<div style="font-size: 12px; font-weight: 600;">${index + 1}. ${displayName}`;
+                        if (mountain.Elevation) {
+                            html += ` <span style="color: #86868b; font-weight: 400;">(${mountain.Elevation}m)</span>`;
+                        }
+                        html += '</div>';
+                        if (mountain.Prefecture) {
+                            html += `<div style="color: #007aff; font-size: 10px; margin-top: 2px;">📍 ${mountain.Prefecture}</div>`;
+                        }
+                        html += '</div>';
+                    });
+
+                    html += '</div>';
+                }
+                html += '</div>';
+
+                infoPanel.innerHTML = html;
+            }
+
+            showRiversList() {
+                const infoPanel = document.getElementById('infoContent');
+                const riversData = (this.metadata.rivers || []).slice();
+                const t = this.t.bind(this);
+
+                // Sort by length (descending)
+                riversData.sort((a, b) => {
+                    const aLength = parseFloat(a.Length) || 0;
+                    const bLength = parseFloat(b.Length) || 0;
+                    return bLength - aLength;
+                });
+
+                let html = '<div class="info-card">';
+                html += `<h3>${t('rivers')}</h3>`;
+                html += `<p style="color: #86868b; margin-bottom: 8px;">${t('total')}: ${riversData.length} ${t('rivers_lower')}</p>`;
+
+                if (riversData.length > 0) {
+                    html += '<div style="max-height: calc(100vh - 250px); overflow-y: auto;">';
+
+                    riversData.forEach((river, index) => {
+                        // Use Japanese name if in Japanese mode and available
+                        const displayName = this.currentLanguage === 'ja' && river['Japanese Name']
+                            ? river['Japanese Name']
+                            : (river.Name || river['Japanese Name'] || '');
+
+                        html += '<div style="cursor: pointer; padding: 6px 0; border-bottom: 1px solid #e8e8ed;" onclick="app.selectRiver(\'' + river.Name.replace(/'/g, "\\'") + '\')">';
+                        html += `<div style="font-size: 12px; font-weight: 600;">${index + 1}. ${displayName}`;
+                        if (river.Length) {
+                            html += ` <span style="color: #86868b; font-weight: 400;">(${river.Length}km)</span>`;
+                        }
+                        html += '</div>';
+                        if (river.Prefecture) {
+                            html += `<div style="color: #007aff; font-size: 10px; margin-top: 2px;">📍 ${river.Prefecture}</div>`;
+                        }
+                        html += '</div>';
+                    });
+
+                    html += '</div>';
+                }
+                html += '</div>';
+
+                infoPanel.innerHTML = html;
+            }
+
+            showLakesList() {
+                const infoPanel = document.getElementById('infoContent');
+                const lakesData = (this.metadata.lakes || []).slice();
+                const t = this.t.bind(this);
+
+                // Sort by area (descending)
+                lakesData.sort((a, b) => {
+                    const aArea = parseFloat(a.Area) || 0;
+                    const bArea = parseFloat(b.Area) || 0;
+                    return bArea - aArea;
+                });
+
+                let html = '<div class="info-card">';
+                html += `<h3>${t('lakes')}</h3>`;
+                html += `<p style="color: #86868b; margin-bottom: 8px;">${t('total')}: ${lakesData.length} ${t('lakes_lower')}</p>`;
+
+                if (lakesData.length > 0) {
+                    html += '<div style="max-height: calc(100vh - 250px); overflow-y: auto;">';
+
+                    lakesData.forEach((lake, index) => {
+                        // Use Japanese name if in Japanese mode and available
+                        const displayName = this.currentLanguage === 'ja' && lake['Japanese Name']
+                            ? lake['Japanese Name']
+                            : (lake.Name || lake['Japanese Name'] || '');
+
+                        html += '<div style="cursor: pointer; padding: 6px 0; border-bottom: 1px solid #e8e8ed;" onclick="app.selectLake(\'' + lake.Name.replace(/'/g, "\\'") + '\')">';
+                        html += `<div style="font-size: 12px; font-weight: 600;">${index + 1}. ${displayName}`;
+                        if (lake.Area) {
+                            html += ` <span style="color: #86868b; font-weight: 400;">(${lake.Area} km²)</span>`;
+                        }
+                        html += '</div>';
+                        if (lake.Prefecture) {
+                            html += `<div style="color: #007aff; font-size: 10px; margin-top: 2px;">📍 ${lake.Prefecture}</div>`;
+                        }
+                        html += '</div>';
+                    });
+
+                    html += '</div>';
+                }
+                html += '</div>';
+
+                infoPanel.innerHTML = html;
+            }
+
+            showMountainRangesList() {
+                const infoPanel = document.getElementById('infoContent');
+                const rangesData = (this.metadata.mountain_ranges || []).slice();
+                const t = this.t.bind(this);
+
+                let html = '<div class="info-card">';
+                html += `<h3>${t('mountainRanges')}</h3>`;
+                html += `<p style="color: #86868b; margin-bottom: 8px;">${t('total')}: ${rangesData.length}</p>`;
+
+                if (rangesData.length > 0) {
+                    html += '<div style="max-height: calc(100vh - 250px); overflow-y: auto;">';
+
+                    rangesData.forEach((range, index) => {
+                        // Use Japanese name if in Japanese mode and available
+                        const displayName = this.currentLanguage === 'ja' && range['Japanese Name']
+                            ? range['Japanese Name']
+                            : (range.Name || range['Japanese Name'] || '');
+
+                        html += '<div style="cursor: pointer; padding: 6px 0; border-bottom: 1px solid #e8e8ed;" onclick="app.selectMountainRange(\'' + range.Name.replace(/'/g, "\\'") + '\')">';
+                        html += `<div style="font-size: 12px; font-weight: 600;">${index + 1}. ${displayName}</div>`;
+                        if (range.Prefecture) {
+                            html += `<div style="color: #007aff; font-size: 10px; margin-top: 2px;">📍 ${range.Prefecture}</div>`;
+                        }
+                        html += '</div>';
+                    });
+
+                    html += '</div>';
+                }
+                html += '</div>';
+
+                infoPanel.innerHTML = html;
+            }
+
+            showSakeRiceDetail(riceName) {
+                const infoPanel = document.getElementById('infoContent');
+                const rice = (this.metadata.sake_rice || []).find(r => r.Name === riceName || r['Japanese Name'] === riceName);
+                const t = this.t.bind(this);
+
+                if (!rice) return;
+
+                let html = '<div class="info-card">';
+
+                // Display name based on language mode
+                if (this.currentLanguage === 'ja' && rice['Japanese Name']) {
+                    html += `<h3>${rice['Japanese Name']}</h3>`;
+                    if (rice.Name) {
+                        html += `<p style="color: #86868b; margin-top: 4px;">${t('englishName')}: ${rice.Name}</p>`;
+                    }
+                } else {
+                    html += `<h3>${rice.Name}</h3>`;
+                    if (rice['Japanese Name']) {
+                        html += `<p style="color: #86868b; margin-top: 4px;">${t('japaneseName')}: ${rice['Japanese Name']}</p>`;
+                    }
+                }
+
+                if (rice.Prefecture) {
+                    html += `<p style="color: #007aff; margin-top: 4px;">📍 ${rice.Prefecture}</p>`;
+                }
+                html += '</div>';
+
+                if (rice.Production_Tonnes) {
+                    html += '<div class="info-card">';
+                    html += `<h3>${t('production')}</h3>`;
+                    html += `<p>${rice.Production_Tonnes} ${t('tonnesYear')}</p>`;
+                    html += '</div>';
+                }
+
+                if (rice.Year) {
+                    html += '<div class="info-card">';
+                    html += `<h3>${t('year')}</h3>`;
+                    html += `<p>${rice.Year}</p>`;
+                    html += '</div>';
+                }
+
+                if (rice.Parents) {
+                    html += '<div class="info-card">';
+                    html += `<h3>${t('parents')}</h3>`;
+                    html += `<p>${rice.Parents}</p>`;
+                    html += '</div>';
+                }
+
+                if (rice.Notes) {
+                    html += '<div class="info-card">';
+                    html += `<h3>${t('notes')}</h3>`;
+                    html += `<p style="line-height: 1.6;">${rice.Notes}</p>`;
+                    html += '</div>';
+                }
+
+                infoPanel.innerHTML = html;
+            }
+
+            selectMountain(mountainName) {
+                // Find the mountain in metadata
+                const mountain = (this.metadata.mountains || []).find(m => m.Name === mountainName);
+                if (!mountain) return;
+
+                // Show info panel
+                this.showInfo(mountain, 'mountains');
+            }
+
+            selectRiver(riverName) {
+                // Find the river in metadata
+                const river = (this.metadata.rivers || []).find(r => r.Name === riverName);
+                if (!river) return;
+
+                // Remove selected class from all rivers
+                document.querySelectorAll('.river.selected').forEach(r => {
+                    r.classList.remove('selected');
+                });
+
+                // Set selected river
+                this.selectedRiver = riverName;
+
+                // Add selected class to matching river paths
+                document.querySelectorAll('.river').forEach(r => {
+                    if (r.getAttribute('data-river-name') === riverName) {
+                        r.classList.add('selected');
+                    }
+                });
+
+                // Show info panel
+                this.showInfo(river, 'rivers');
+            }
+
+            selectLake(lakeName) {
+                // Find the lake in metadata
+                const lake = (this.metadata.lakes || []).find(l => l.Name === lakeName);
+                if (!lake) return;
+
+                // Show info panel
+                this.showInfo(lake, 'lakes');
+            }
+
+            selectMountainRange(rangeName) {
+                // Find the range in metadata
+                const range = (this.metadata.mountain_ranges || []).find(r => r.Name === rangeName);
+                if (!range) return;
+
+                // Toggle selection
+                if (this.selectedMountainRange === rangeName) {
+                    this.selectedMountainRange = null;
+                } else {
+                    this.selectedMountainRange = rangeName;
+                }
+
+                // Re-render map to show selection
+                this.renderMap();
+
+                // Show info panel
+                this.showInfo(range, 'mountain_ranges');
+            }
+
+            showInfo(item, layerKey) {
+                const infoPanel = document.getElementById('infoContent');
+                const metadata = this.metadata[layerKey] || [];
+                const metaItem = metadata.find(m => m.Name === item.Name || m['Japanese Name'] === item['Japanese Name']);
+                const t = this.t.bind(this);
+
+                let html = '<div class="info-card">';
+
+                // Display name based on language mode
+                if (this.currentLanguage === 'ja' && (item['Japanese Name'] || (metaItem && metaItem['Japanese Name']))) {
+                    const japaneseName = item['Japanese Name'] || metaItem['Japanese Name'];
+                    html += `<h3>${japaneseName}</h3>`;
+                    if (item.Name || (metaItem && metaItem.Name)) {
+                        const englishName = item.Name || metaItem.Name;
+                        html += `<p style="color: #86868b; margin-top: 4px;">${t('englishName')}: ${englishName}</p>`;
+                    }
+                } else {
+                    html += `<h3>${item.Name || item['Japanese Name']}</h3>`;
+                    if (item['Japanese Name'] || (metaItem && metaItem['Japanese Name'])) {
+                        const japaneseName = item['Japanese Name'] || metaItem['Japanese Name'];
+                        html += `<p style="color: #86868b; margin-top: 4px;">${t('japaneseName')}: ${japaneseName}</p>`;
+                    }
+                }
+
+                if (metaItem) {
+                    for (const [key, value] of Object.entries(metaItem)) {
+                        if (key !== 'Name' && key !== 'Japanese Name' && value) {
+                            // Special formatting for Prefecture field (handle semicolon-separated lists)
+                            if (key === 'Prefecture' || key === ' Prefecture') {
+                                const prefectures = value.split(';').map(p => p.trim());
+                                const label = prefectures.length > 1 ? t('prefectures') : t('prefecture');
+                                const displayValue = prefectures.join(', ');
+                                html += `<p><strong>${label}:</strong> <span class="value">${displayValue}</span></p>`;
+                            } else if (key === 'Region') {
+                                html += `<p><strong>${t('region')}:</strong> <span class="value">${value}</span></p>`;
+                            } else if (key === 'Provinces') {
+                                html += `<p><strong>${t('provinces')}:</strong> <span class="value">${value}</span></p>`;
+                            } else if (key === 'Elevation') {
+                                html += `<p><strong>${t('elevation')}:</strong> <span class="value">${value}m</span></p>`;
+                            } else if (key === 'Length') {
+                                html += `<p><strong>${t('length')}:</strong> <span class="value">${value}</span></p>`;
+                            } else if (key === 'Area') {
+                                html += `<p><strong>${t('area')}:</strong> <span class="value">${value}</span></p>`;
+                            } else {
+                                html += `<p><strong>${key}:</strong> <span class="value">${value}</span></p>`;
+                            }
+                        }
+                    }
+                }
+
+                // Add geometry-specific info
+                if (item.Elevation) {
+                    html += `<p><strong>${t('elevation')}:</strong> <span class="value">${item.Elevation}m</span></p>`;
+                }
+                if (item.Latitude && item.Longitude) {
+                    html += `<p><strong>Coordinates:</strong> <span class="value">${item.Latitude}, ${item.Longitude}</span></p>`;
+                }
+
+                html += '</div>';
+                infoPanel.innerHTML = html;
+
+                // Highlight the prefecture containing this feature
+                this.highlightPrefecture(metaItem || item);
+            }
+
+            highlightPrefecture(item) {
+                // Remove previous highlights
+                document.querySelectorAll('.prefecture-highlight').forEach(el => {
+                    el.classList.remove('prefecture-highlight');
+                });
+
+                // Get prefecture name(s) from item (handle semicolon-separated lists)
+                const prefectureValue = item.Prefecture || item[' Prefecture'];
+                if (!prefectureValue) return;
+
+                const prefectureNames = prefectureValue.split(';').map(p => p.trim());
+
+                // Find and highlight all matching prefecture polygons
+                const prefectures = document.querySelectorAll('.base-outline, .prefecture');
+                prefectures.forEach((prefElement) => {
+                    const elementName = prefElement.getAttribute('data-name');
+                    if (!elementName) return;
+
+                    // Check if this element matches any of the prefectures
+                    for (const prefectureName of prefectureNames) {
+                        if (this.prefecturesMatch(elementName, prefectureName)) {
+                            prefElement.classList.add('prefecture-highlight');
+                            break;
+                        }
+                    }
+                });
+            }
+
+            // Zoom and Pan methods
+            setupZoomPan() {
+                const container = document.getElementById('mapContainer');
+
+                // Mouse wheel zoom
+                container.addEventListener('wheel', (e) => {
+                    e.preventDefault();
+                    const delta = e.deltaY > 0 ? -0.1 : 0.1;
+                    this.zoom = Math.max(0.5, Math.min(5, this.zoom + delta));
+                    this.updateTransform();
+                });
+
+                // Pan on drag
+                container.addEventListener('mousedown', (e) => {
+                    this.isPanning = true;
+                    this.startX = e.clientX - this.panX;
+                    this.startY = e.clientY - this.panY;
+                    container.classList.add('panning');
+                });
+
+                container.addEventListener('mousemove', (e) => {
+                    if (!this.isPanning) return;
+                    this.panX = e.clientX - this.startX;
+                    this.panY = e.clientY - this.startY;
+                    this.updateTransform();
+                });
+
+                container.addEventListener('mouseup', () => {
+                    this.isPanning = false;
+                    container.classList.remove('panning');
+                });
+
+                // Clear prefecture filter when clicking on empty space
+                const svg = document.getElementById('map');
+                svg.addEventListener('click', (e) => {
+                    // Only clear if clicking directly on SVG or mapGroup (not on child elements)
+                    const isBackground = e.target === svg || e.target.id === 'mapGroup';
+
+                    if (isBackground && this.filteredPrefecture) {
+                        this.filteredPrefecture = null;
+                        this.renderMap();
+                    }
+                });
+
+                container.addEventListener('mouseleave', () => {
+                    this.isPanning = false;
+                    container.classList.remove('panning');
+                });
+            }
+
+            zoomIn() {
+                this.zoom = Math.min(5, this.zoom * 1.3);
+                this.updateTransform();
+            }
+
+            zoomOut() {
+                this.zoom = Math.max(0.5, this.zoom / 1.3);
+                this.updateTransform();
+            }
+
+            resetZoom() {
+                this.zoom = 1;
+                this.panX = 0;
+                this.panY = 0;
+                this.filteredPrefecture = null;
+                this.selectedRiver = null;
+                this.selectedMountainRange = null;
+
+                // Reload all data
+                this.loadAllData().then(() => {
+                    this.updateTransform();
+                    this.renderMap();
+                    this.showDefaultInfo(this.currentLayer);
+                });
+            }
+
+            updateTransform() {
+                const mapGroup = document.getElementById('mapGroup');
+                if (mapGroup) {
+                    mapGroup.setAttribute('transform', `translate(${this.panX}, ${this.panY}) scale(${this.zoom})`);
+                }
+
+                // Update zoom level display
+                const zoomLevel = document.getElementById('zoomLevel');
+                if (zoomLevel) {
+                    zoomLevel.textContent = `${Math.round(this.zoom * 100)}%`;
+                }
+
+                // Redraw labels based on current layer
+                if (this.currentLayer === 'mountains' && this.mountainData) {
+                    this.redrawFeatureLabels('mountain');
+                } else if (this.currentLayer === 'rivers' && this.riverData) {
+                    this.redrawFeatureLabels('river');
+                } else if (this.currentLayer === 'lakes') {
+                    this.redrawFeatureLabels('lake');
+                }
+            }
+
+            redrawFeatureLabels(featureType) {
+                const mapGroup = document.getElementById('mapGroup');
+                if (!mapGroup) return;
+
+                // Remove existing labels and lines for this feature type
+                const existingLabels = mapGroup.querySelectorAll(`.${featureType}-label-text`);
+                const existingLines = mapGroup.querySelectorAll(`.${featureType}-label-line`);
+
+                existingLabels.forEach(el => el.remove());
+                existingLines.forEach(el => el.remove());
+
+                // Redraw labels with new positions
+                if (featureType === 'mountain') {
+                    this.renderMountainLabels(mapGroup);
+                } else if (featureType === 'river' && this.riverData) {
+                    this.renderFeatureLabels(mapGroup, this.riverData, 'river');
+                } else if (featureType === 'lake' && this.geometry.lakes) {
+                    this.renderFeatureLabels(mapGroup, this.geometry.lakes, 'lake');
+                }
+            }
+        }
+
+        // Initialize the application
+        const app = new JapanGeoExplorer();
+    </script>
+</body>
+</html>
